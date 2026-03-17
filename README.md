@@ -6,6 +6,7 @@ EBU6304 - Software Engineering
 * #### T4PE3: 231224114 (Member)
 * #### hby34bi238: 231224273 (Member)
 * #### 123FYPP: 231225074 (Member)
+* #### Xing-zuo: 231224723(Member)
 
 * ####  githubID: qm number (Member)
 
