@@ -4,7 +4,8 @@ EBU6304 - Software Engineering
 ## Group Name-list
 * #### xys1318: 231224398 (Lead) 
 * #### T4PE3: 231224114 (Member)
-* #### hby34bi238:231224273 (Member)
+* #### hby34bi238: 231224273 (Member)
+* #### 123FYPP: 231225074 (Member)
 
 * ####  githubID: qm number (Member)
 
