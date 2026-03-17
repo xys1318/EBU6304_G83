@@ -3,8 +3,9 @@ EBU6304 - Software Engineering
 ## Project Title: BUPT Teaching Assistant Recruitment System
 ## Group Name-list
 * #### xys1318: 231224398 (Lead) 
+* #### T4PE3: 231224114 (Member) 
 
-* ####  githubID: qm number (Member) 
+* ####  githubID: qm number (Member)
 
 #### Assigned TA: xuanxuanzhu77733-dotcom
 
