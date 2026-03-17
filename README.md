@@ -4,7 +4,7 @@ EBU6304 - Software Engineering
 ## Group Name-list
 * #### xys1318: 231224398 (Lead) 
 
-* ####  githubID: QM number (Member) 
+* ####  githubID: qm number (Member) 
 
 #### Assigned TA: xuanxuanzhu77733-dotcom
 
