@@ -2,9 +2,9 @@
 EBU6304 - Software Engineering
 ## Project Title: BUPT Teaching Assistant Recruitment System
 ## Group Name-list
-* #### Youshen Xu:231224398 (Lead) 
+* #### xys1318: 231224398 (Lead) 
 
-* ####  name:QM number (Member) 
+* ####  githubID: QM number (Member) 
 
 #### Assigned TA: xuanxuanzhu77733-dotcom
 
