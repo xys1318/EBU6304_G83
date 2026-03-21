@@ -12,7 +12,7 @@ EBU6304 - Software Engineering
 * #### hby34bi238: 231224273 (Member)
 * #### 123FYPP: 231225074 (Member)
 * #### Xing-zuo: 231224723(Member)
-* #### githubID: qm number (Member)
+* #### channing-i: 231224985(Member)
 
 #### Assigned TA: xuanxuanzhu77733-dotcom
 
