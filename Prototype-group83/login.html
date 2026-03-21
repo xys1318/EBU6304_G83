@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- 网页标题 英文 | Page Title English -->
+    <title>TA Recruitment System - Login</title>
+    <style>
+        /* 页面容器样式 居中布局 | Container Style, Center Layout */
+        .container {width: 420px; margin: 120px auto; padding: 30px; border: 1px solid #ddd; border-radius: 8px;}
+        /* 按钮通用样式 | Button General Style */
+        button {margin: 10px 5px; padding: 8px 20px; cursor: pointer;}
+        /* 标题居中 | Title Center */
+        h2 {text-align: center; color: #333;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>TA Recruitment System - Login</h2>
+        <!-- 角色选择 | Role Selection -->
+        <p>Role: <input type="radio" name="role" checked> TA <input type="radio" name="role"> MO</p>
+        <p>Username: <input type="text" id="username" placeholder="Enter username"></p>
+        <p>Password: <input type="password" id="pwd" placeholder="Enter password"></p>
+        
+        <!-- 登录按钮：验证成功后跳转到档案页 | Login Button: Jump to profile after verification -->
+        <button onclick="login()">Login</button>
+        <!-- 注册按钮：跳转到注册页 | Register Button: Jump to register page -->
+        <button onclick="window.location.href='register.html'">Register</button>
+    </div>
+
+    <script>
+        // 登录验证函数 模拟默认账号：ta 密码：123456 | Login Function, Default Account: ta/123456
+        function login() {
+            let user = document.getElementById("username").value;
+            let password = document.getElementById("pwd").value;
+            // 账号密码验证 | Verify username and password
+            if(user === "ta" && password === "123456") {
+                alert("Login Success! Redirect to Profile Page");
+                // 登录成功 跳转到个人档案页 | Login Success, Jump to Profile Page
+                window.location.href = "profile.html";
+            } else {
+                alert("Login Failed! Username: ta, Password: 123456");
+            }
+        }
+    </script>
+</body>
+</html>

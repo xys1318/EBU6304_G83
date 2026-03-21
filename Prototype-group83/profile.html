@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile</title>
+    <style>
+        .container {width: 520px; margin: 120px auto; padding: 30px; border: 1px solid #ddd; border-radius: 8px;}
+        button {margin: 10px 5px; padding: 8px 20px; cursor: pointer;}
+        h2 {text-align: center; color: #333;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>My Personal Profile</h2>
+        <p>Student ID: <input value="2026001" disabled></p>
+        <p>Full Name: <input value="Test TA" disabled></p>
+        <p>Major: <input type="text" placeholder="Enter your major"></p>
+        <!-- 技能选择 | Skills Selection -->
+        <p>Skills: <input type="checkbox"> Java <input type="checkbox"> English <input type="checkbox"> Python</p>
+        <p>Teaching Experience: <textarea rows="3" placeholder="Enter your experience"></textarea></p>
+        
+        <!-- 保存档案 | Save Profile -->
+        <button onclick="alert('Profile Saved Successfully!')">Save Profile</button>
+        <!-- 跳转到职位浏览页 | Jump to Job List Page -->
+        <button onclick="window.location.href='jobs.html'">Browse Jobs</button>
+        <!-- 返回登录页 | Back to Login -->
+        <button onclick="window.location.href='login.html'">Logout</button>
+    </div>
+</body>
+</html>

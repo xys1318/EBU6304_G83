@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Apply Confirm</title>
+    <style>
+        .container {width: 420px; margin: 120px auto; padding: 30px; border: 1px solid #ddd; border-radius: 8px;}
+        button {margin: 10px 5px; padding: 8px 20px; cursor: pointer;}
+        h2 {text-align: center; color: #333;}
+        p {font-size: 16px; color: #333;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Job Application Confirm</h2>
+        <p>Position: EBU6304 Teaching Assistant</p>
+        <p>Applicant: Test TA</p>
+        <p><b>Are you sure to submit the application?</b></p>
+        
+        <!-- 确认提交申请 | Confirm Application -->
+        <button onclick="alert('✅ Application Submitted Successfully!')">Confirm</button>
+        <!-- 返回职位列表 | Back to Job List -->
+        <button onclick="window.location.href='jobs.html'">Cancel</button>
+    </div>
+</body>
+</html>

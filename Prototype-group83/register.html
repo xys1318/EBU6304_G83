@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TA Recruitment System - Register</title>
+    <style>
+        .container {width: 420px; margin: 120px auto; padding: 30px; border: 1px solid #ddd; border-radius: 8px;}
+        button {margin: 10px 5px; padding: 8px 20px; cursor: pointer;}
+        h2 {text-align: center; color: #333;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>TA Account Registration</h2>
+        <p>Student ID: <input type="text" placeholder="Enter your student ID"></p>
+        <p>Full Name: <input type="text" placeholder="Enter your full name"></p>
+        <p>Email: <input type="text" placeholder="Enter your email"></p>
+        <p>Password: <input type="password" placeholder="Set your password"></p>
+        
+        <!-- 提交注册 | Submit Registration -->
+        <button onclick="register()">Submit</button>
+        <!-- 返回登录页 | Back to Login Page -->
+        <button onclick="window.location.href='login.html'">Back to Login</button>
+    </div>
+
+    <script>
+        // 注册函数 注册成功返回登录 | Register Function, Back to Login after Success
+        function register() {
+            alert("Registration Success! Please Login");
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+</html>
