@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Available Jobs</title>
+    <style>
+        /* QMUL website style */
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            color: #333333;
+        }
+        
+        .header {
+            background-color: #003366;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .container {
+            width: 700px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            text-align: center;
+            margin-top: 0;
+            color: #003366;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .job-card {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #003366;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .job-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .job-card h4 {
+            color: #003366;
+            margin: 0 0 15px 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .job-info {
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .job-info p {
+            margin: 5px 0;
+        }
+        
+        .job-info span {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        button {
+            margin: 10px 5px 0 0;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: #003366;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #002244;
+        }
+        
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #f0f0f0;
+            font-size: 12px;
+            color: #666;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .no-jobs {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>TA Recruitment System</h1>
+        <p>Queen Mary University of London - Beijing University of Posts and Telecommunications</p>
+    </div>
+    
+    <style>
+        /* Dynamic background */
+        body {
+            background: linear-gradient(-45deg, #e6f2ff, #ffffff, #e6f2ff, #ffffff);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+    </style>
+    
+    <div class="container">
+        <h2>Available TA Jobs</h2>
+        
+        <div id="jobsContainer">
+            <!-- Jobs will be dynamically inserted here -->
+        </div>
+        
+        <div class="navigation">
+            <button class="btn-secondary" onclick="window.location.href='profile.html'">Back to Profile</button>
+            <button class="btn-secondary" onclick="window.location.href='application_records.html'">Application Records</button>
+            <button class="btn-danger" onclick="logout()">Logout</button>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>© 2026 BUPT International School. All rights reserved.</p>
+    </div>
+
+    <script>
+        // Check session
+        // 检查会话
+        function checkSession() {
+            if (!localStorage.getItem("username")) {
+                window.location.href = "login.html";
+            }
+        }
+        
+        // Load jobs
+        // 加载职位
+        function loadJobs() {
+            // Get jobs from localStorage
+            // 从localStorage获取职位
+            let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+            
+            // Add default jobs if none exist
+            // 如果没有职位，添加默认职位
+            if (jobs.length === 0) {
+                jobs = [
+                    {
+                        id: 1,
+                        title: "EBU6304 Teaching Assistant",
+                        workload: "5h/week",
+                        requirements: "Basic Programming",
+                        deadline: "May 31, 2026",
+                        status: "Open"
+                    },
+                    {
+                        id: 2,
+                        title: "EBU6001 Teaching Assistant",
+                        workload: "3h/week",
+                        requirements: "Good English",
+                        deadline: "May 31, 2026",
+                        status: "Closed"
+                    },
+                    {
+                        id: 3,
+                        title: "EBU6201 Teaching Assistant",
+                        workload: "4h/week",
+                        requirements: "Python Programming",
+                        deadline: "May 31, 2026",
+                        status: "Open"
+                    }
+                ];
+                localStorage.setItem("jobs", JSON.stringify(jobs));
+            }
+            
+            let jobsContainer = document.getElementById("jobsContainer");
+            
+            if (jobs.length === 0) {
+                jobsContainer.innerHTML = '<div class="no-jobs">No jobs available at the moment.</div>';
+                return;
+            }
+            
+            // Generate job cards
+            // 生成职位卡片
+            let jobsHTML = '';
+            jobs.forEach((job, index) => {
+                let buttonClass = job.status === "Open" ? "btn-primary" : "btn-secondary";
+                let buttonText = job.status === "Open" ? "Apply Now" : "Position Closed";
+                let buttonAction = job.status === "Open" ? `onclick="applyForJob(${job.id}, '${job.title}')"` : `onclick="alert('This position is closed!')"`;
+                
+                jobsHTML += `
+                    <div class="job-card">
+                        <h4>${index + 1}. ${job.title}</h4>
+                        <div class="job-info">
+                            <p><span>Workload:</span> ${job.workload}</p>
+                            <p><span>Requirements:</span> ${job.requirements}</p>
+                            <p><span>Deadline:</span> ${job.deadline}</p>
+                            <p><span>Status:</span> ${job.status}</p>
+                        </div>
+                        <button class="${buttonClass}" ${buttonAction}>${buttonText}</button>
+                    </div>
+                `;
+            });
+            
+            jobsContainer.innerHTML = jobsHTML;
+        }
+        
+        // Apply for job
+        // 申请职位
+        function applyForJob(jobId, jobTitle) {
+            // Check for duplicate application
+            // 检查重复申请
+            let applications = JSON.parse(localStorage.getItem("applications")) || [];
+            let username = localStorage.getItem("username");
+            
+            let isDuplicate = applications.some(app => 
+                app.jobId == jobId && app.applicantName === username
+            );
+            
+            if (isDuplicate) {
+                alert("You have already applied for this position!");
+                return;
+            }
+            
+            // Save job info to localStorage
+            // 保存职位信息到localStorage
+            localStorage.setItem("currentJobId", jobId);
+            localStorage.setItem("currentJobTitle", jobTitle);
+            // Jump to application confirm page
+            // 跳转到申请确认页面
+            window.location.href = "apply.html";
+        }
+        
+        // Logout
+        // 登出
+        function logout() {
+            localStorage.removeItem("username");
+            localStorage.removeItem("role");
+            window.location.href = "login.html";
+        }
+        
+        // Check session and load jobs on page load
+        // 页面加载时检查会话和加载职位
+        window.onload = function() {
+            checkSession();
+            loadJobs();
+        };
+    </script>
+</body>
+</html>
