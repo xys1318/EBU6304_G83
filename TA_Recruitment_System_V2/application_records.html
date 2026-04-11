@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Application Records</title>
+    <style>
+        /* QMUL website style */
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            color: #333333;
+        }
+        
+        .header {
+            background-color: #003366;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .personal-center-entry {
+            position: absolute;
+            left: 24px;
+            top: 20px;
+            background-color: #ffffff;
+            color: #003366;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            padding: 8px 14px;
+            cursor: pointer;
+        }
+        
+        .container {
+            width: 700px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            text-align: center;
+            margin-top: 0;
+            color: #003366;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        h3 {
+            color: #666;
+            margin: 10px 0 20px 0;
+            font-size: 16px;
+            font-weight: normal;
+        }
+        
+        .records-container {
+            margin-top: 30px;
+        }
+        
+        .record-card {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #003366;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .record-card h4 {
+            color: #003366;
+            margin: 0 0 15px 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .record-info {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        
+        .record-info span {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        .status-pending {
+            background-color: #ffc107;
+            color: #333;
+        }
+        
+        .status-approved {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .status-rejected {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        button {
+            margin: 10px 5px;
+            padding: 12px 25px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: #003366;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #002244;
+        }
+        
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #f0f0f0;
+            font-size: 12px;
+            color: #666;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .no-records {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-style: italic;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button class="personal-center-entry" onclick="goPersonalCenter()">Personal Center</button>
+        <h1>TA Recruitment System</h1>
+        <p>Queen Mary University of London - Beijing University of Posts and Telecommunications</p>
+    </div>
+    
+    <style>
+        /* Dynamic background */
+        body {
+            background: linear-gradient(-45deg, #e6f2ff, #ffffff, #e6f2ff, #ffffff);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+    </style>
+    
+    <div class="container">
+        <h2>Application Records</h2>
+        
+        <div class="records-container" id="recordsContainer">
+            <!-- Application records will be dynamically inserted here -->
+        </div>
+        
+        <div class="navigation">
+            <button class="btn-secondary" onclick="window.location.href='profile.html'">Back to Profile</button>
+            <button class="btn-secondary" onclick="window.location.href='job.html'">Browse Jobs</button>
+            <button class="btn-danger" onclick="logout()">Logout</button>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>© 2026 BUPT International School. All rights reserved.</p>
+    </div>
+
+    <script>
+        // Check session
+        // 检查会话
+        function checkSession() {
+            if (!localStorage.getItem("username")) {
+                window.location.href = "login.html";
+            }
+        }
+        
+        // Load application records
+        // 加载申请记录
+        function loadApplicationRecords() {
+            let applications = JSON.parse(localStorage.getItem("applications")) || [];
+            let username = localStorage.getItem("username");
+            let recordsContainer = document.getElementById("recordsContainer");
+            
+            // Filter applications for current user
+            // 筛选当前用户的申请
+            let userApplications = applications.filter(app => app.applicantName === username);
+            
+            if (userApplications.length === 0) {
+                recordsContainer.innerHTML = '<div class="no-records">No application records found.</div>';
+                return;
+            }
+            
+            // Generate record cards
+            // 生成记录卡片
+            let recordsHTML = '';
+            userApplications.forEach((app, index) => {
+                let statusClass = '';
+                switch (app.status) {
+                    case 'Pending':
+                        statusClass = 'status-pending';
+                        break;
+                    case 'Approved':
+                        statusClass = 'status-approved';
+                        break;
+                    case 'Rejected':
+                        statusClass = 'status-rejected';
+                        break;
+                }
+                
+                let date = new Date(app.date).toLocaleDateString();
+                
+                recordsHTML += `
+                    <div class="record-card">
+                        <h4>${index + 1}. ${app.jobTitle}</h4>
+                        <div class="record-info"><span>Application Date:</span> ${date}</div>
+                        <div class="record-info"><span>Status:</span> <span class="status ${statusClass}">${app.status}</span></div>
+                    </div>
+                `;
+            });
+            
+            recordsContainer.innerHTML = recordsHTML;
+        }
+        
+        // Logout
+        // 登出
+        function logout() {
+            localStorage.removeItem("username");
+            localStorage.removeItem("role");
+            window.location.href = "login.html";
+        }
+
+        function goPersonalCenter() {
+            window.location.href = "personal_center.html";
+        }
+        
+        // Check session and load records on page load
+        // 页面加载时检查会话和加载记录
+        window.onload = function() {
+            checkSession();
+            loadApplicationRecords();
+        };
+    </script>
+</body>
+</html>
