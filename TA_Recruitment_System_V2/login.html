@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TA Recruitment System - Login</title>
+    <style>
+        /* QMUL website style */
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            color: #333333;
+        }
+        
+        .header {
+            background-color: #003366;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .university-logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0;
+        }
+        
+        .logo-container {
+            text-align: center;
+            margin: 0 30px;
+        }
+        
+        .logo-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .logo-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .logo-text {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .container {
+            width: 400px;
+            margin: 0 auto 40px;
+            padding: 30px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input[type="text"],
+        .form-group input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input[type="text"]:focus,
+        .form-group input[type="password"]:focus {
+            outline: none;
+            border-color: #003366;
+            box-shadow: 0 0 0 2px rgba(0,51,102,0.1);
+        }
+        
+        .role-selection {
+            margin: 25px 0;
+        }
+        
+        .role-selection label {
+            margin-right: 20px;
+            font-weight: normal;
+            cursor: pointer;
+        }
+        
+        .role-selection input[type="radio"] {
+            margin-right: 5px;
+        }
+        
+        .button-group {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        button {
+            padding: 12px 25px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: #003366;
+            color: white;
+            flex: 1;
+            margin-right: 10px;
+        }
+        
+        .btn-primary:hover {
+            background-color: #002244;
+        }
+        
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+            flex: 1;
+            margin-left: 10px;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #f0f0f0;
+            font-size: 12px;
+            color: #666;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        
+        .login-info {
+            background-color: #e6f2ff;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #003366;
+        }
+        
+        .login-info h4 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .login-info ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .login-info li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>TA Recruitment System</h1>
+        <p>Queen Mary University of London - Beijing University of Posts and Telecommunications</p>
+    </div>
+    
+    <style>
+        /* Dynamic background */
+        body {
+            background: linear-gradient(-45deg, #e6f2ff, #ffffff, #e6f2ff, #ffffff);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+    </style>
+    
+    <div class="university-logos">
+        <div class="logo-container">
+            <div class="logo-image">
+                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Queen%20Mary%20University%20of%20London%20official%20crest%20logo%20emblem&image_size=square" alt="QMUL Logo">
+            </div>
+            <div class="logo-text">Queen Mary<br>University of London</div>
+        </div>
+        <div class="logo-container">
+            <div class="logo-image">
+                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Beijing%20University%20of%20Posts%20and%20Telecommunications%20official%20crest%20logo%20emblem&image_size=square" alt="BUPT Logo">
+            </div>
+            <div class="logo-text">Beijing University of<br>Posts and Telecommunications</div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h2 style="text-align: center; margin-top: 0; color: #003366;">Login</h2>
+        
+        <div class="form-group">
+            <label>Role</label>
+            <div class="role-selection">
+                <input type="radio" name="role" value="ta" checked> TA 
+                <input type="radio" name="role" value="mo"> MO 
+                <input type="radio" name="role" value="admin"> Admin
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" id="username" placeholder="Enter username">
+        </div>
+        
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="pwd" placeholder="Enter password">
+        </div>
+        
+        <div class="button-group">
+            <button class="btn-primary" onclick="login()">Login</button>
+            <button class="btn-secondary" onclick="window.location.href='register.html'">Register</button>
+        </div>
+        
+        <div class="login-info">
+            <h4>Default Credentials:</h4>
+            <ul>
+                <li>TA: username=ta, password=123456</li>
+                <li>MO: username=mo, password=654321</li>
+                <li>Admin: username=admin, password=admin123</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>© 2026 BUPT International School. All rights reserved.</p>
+    </div>
+
+    <script>
+        // Login function with role-based authentication
+        // 登录验证函数，支持基于角色的认证
+        function login() {
+            let user = document.getElementById("username").value;
+            let password = document.getElementById("pwd").value;
+            let role = document.querySelector('input[name="role"]:checked').value;
+            
+            // Check registered users first
+            // 首先检查注册用户
+            let users = JSON.parse(localStorage.getItem("users")) || [];
+            let registeredUser = users.find(u => u.studentId === user && u.password === password && u.role === role);
+            
+            let isValid = false;
+            let redirectUrl = "";
+            
+            if (registeredUser) {
+                // Registered user found
+                // 找到注册用户
+                isValid = true;
+                redirectUrl = role === "ta" ? "profile.html" : role === "mo" ? "mo_dashboard.html" : "admin_dashboard.html";
+            } else if (role === "ta" && user === "ta" && password === "123456") {
+                // Default TA account
+                // 默认TA账号
+                isValid = true;
+                redirectUrl = "profile.html";
+            } else if (role === "mo" && user === "mo" && password === "654321") {
+                // Default MO account
+                // 默认MO账号
+                isValid = true;
+                redirectUrl = "mo_dashboard.html";
+            } else if (role === "admin" && user === "admin" && password === "admin123") {
+                // Default Admin account
+                // 默认Admin账号
+                isValid = true;
+                redirectUrl = "admin_dashboard.html";
+            }
+            
+            if (isValid) {
+                // Login successful, save session info
+                // 登录成功，保存会话信息
+                localStorage.setItem("username", user);
+                localStorage.setItem("role", role);
+                alert("Login Success! Redirecting...");
+                window.location.href = redirectUrl;
+            } else {
+                alert("Login Failed! Please check your credentials.");
+            }
+        }
+    </script>
+</body>
+</html>
