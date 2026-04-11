@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Details</title>
+    <style>
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            color: #333333;
+            background: linear-gradient(-45deg, #e6f2ff, #ffffff, #e6f2ff, #ffffff);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .header {
+            background-color: #003366;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .personal-center-entry {
+            position: absolute;
+            left: 24px;
+            top: 20px;
+            background-color: #ffffff;
+            color: #003366;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            padding: 8px 14px;
+            cursor: pointer;
+        }
+
+        .container {
+            width: 1100px;
+            margin: 32px auto 90px;
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 20px;
+        }
+
+        .card {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+        }
+
+        .job-header h2 {
+            margin: 0 0 12px 0;
+            color: #003366;
+            font-size: 26px;
+        }
+
+        .meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .meta-pill {
+            background-color: #e6f2ff;
+            color: #003366;
+            border-radius: 999px;
+            padding: 8px 12px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .search-card {
+            margin-bottom: 20px;
+        }
+
+        .search-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-group input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .search-group input:focus {
+            outline: none;
+            border-color: #003366;
+            box-shadow: 0 0 0 2px rgba(0, 51, 102, 0.1);
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #003366;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #002244;
+        }
+
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+
+        .company-card {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .company-logo {
+            width: 64px;
+            height: 64px;
+            border-radius: 8px;
+            object-fit: cover;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .company-text h3 {
+            margin: 0 0 6px 0;
+            color: #003366;
+            font-size: 18px;
+        }
+
+        .company-text p {
+            margin: 4px 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .section-title {
+            margin: 0 0 12px 0;
+            color: #003366;
+            font-size: 20px;
+        }
+
+        .detail-block {
+            margin-bottom: 16px;
+        }
+
+        .detail-block h4 {
+            margin: 0 0 8px 0;
+            color: #003366;
+            font-size: 16px;
+        }
+
+        .detail-block p {
+            margin: 0;
+            line-height: 1.8;
+            color: #444;
+            font-size: 14px;
+            white-space: pre-line;
+        }
+
+        .action-bar {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .sidebar-title {
+            margin-top: 0;
+            color: #003366;
+            font-size: 20px;
+        }
+
+        .similar-item {
+            background-color: white;
+            border-left: 4px solid #003366;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .similar-item h4 {
+            margin: 0 0 8px 0;
+            color: #003366;
+            font-size: 15px;
+        }
+
+        .similar-item p {
+            margin: 4px 0;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .result-list {
+            margin-top: 12px;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        .result-item {
+            border: 1px solid #e8e8e8;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 8px;
+            background: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .result-item span {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .navigation {
+            margin-top: 16px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #f0f0f0;
+            font-size: 12px;
+            color: #666;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .modal-mask {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.45);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+
+        .modal {
+            width: 620px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 14px 18px;
+            background-color: #003366;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h4 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .close-btn {
+            background: transparent;
+            color: white;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 18px;
+            font-size: 14px;
+            color: #444;
+            line-height: 1.8;
+            max-height: 420px;
+            overflow-y: auto;
+            white-space: pre-line;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button class="personal-center-entry" onclick="goPersonalCenter()">Personal Center</button>
+        <h1>TA Recruitment System</h1>
+        <p>Queen Mary University of London - Beijing University of Posts and Telecommunications</p>
+    </div>
+
+    <div class="container">
+        <div>
+            <div class="card search-card">
+                <h3 class="section-title">岗位搜索（模糊筛选）</h3>
+                <div class="search-group">
+                    <input id="searchInput" type="text" placeholder="输入课程名/关键词/地点/学历进行搜索">
+                    <button class="btn btn-primary" onclick="searchJobs()">搜索</button>
+                </div>
+                <div class="result-list" id="searchResults"></div>
+            </div>
+
+            <div class="card job-header">
+                <h2 id="jobTitle">Loading...</h2>
+                <div class="meta-row">
+                    <span class="meta-pill" id="jobSalary">Salary: -</span>
+                    <span class="meta-pill" id="jobExperience">Experience: -</span>
+                    <span class="meta-pill" id="jobEducation">Education: -</span>
+                    <span class="meta-pill" id="jobLocation">Location: -</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="company-card">
+                    <img class="company-logo" id="companyLogo" alt="Company Logo" src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=university%20academic%20logo%20minimal%20blue&image_size=square">
+                    <div class="company-text">
+                        <h3 id="companyName">BUPT International School</h3>
+                        <p id="companySize">规模：1000+ employees</p>
+                        <p id="companyIndustry">行业：Higher Education</p>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" onclick="openCompanyModal()">查看岗位详细信息（公司卡片）</button>
+            </div>
+
+            <div class="card">
+                <h3 class="section-title">职位详情</h3>
+                <div class="detail-block">
+                    <h4>岗位职责</h4>
+                    <p id="jobResponsibilities"></p>
+                </div>
+                <div class="detail-block">
+                    <h4>任职要求</h4>
+                    <p id="jobRequirements"></p>
+                </div>
+                <div class="detail-block">
+                    <h4>工作内容</h4>
+                    <p id="jobContent"></p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="section-title">操作栏</h3>
+                <div class="action-bar">
+                    <button class="btn btn-primary" onclick="applyNow()">立即投递</button>
+                    <button class="btn btn-secondary" onclick="toggleFavorite()" id="favoriteBtn">收藏职位</button>
+                </div>
+                <div class="navigation">
+                    <button class="btn btn-secondary" onclick="window.location.href='job.html'">返回岗位列表</button>
+                    <button class="btn btn-secondary" onclick="window.location.href='application_records.html'">查看申请记录</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 class="sidebar-title">相似职位推荐</h3>
+            <div id="similarJobsContainer"></div>
+        </div>
+    </div>
+
+    <div class="modal-mask" id="companyModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h4>公司与岗位详细信息</h4>
+                <button class="close-btn" onclick="closeCompanyModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="companyModalContent"></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2026 BUPT International School. All rights reserved.</p>
+    </div>
+
+    <script>
+        function checkSession() {
+            if (!localStorage.getItem("username")) {
+                window.location.href = "login.html";
+            }
+        }
+
+        function getDefaultJobs() {
+            return [
+                {
+                    id: 1,
+                    title: "EBU6304 Teaching Assistant",
+                    workload: "5h/week",
+                    requirements: "Basic Programming",
+                    deadline: "May 31, 2026",
+                    status: "Open"
+                },
+                {
+                    id: 2,
+                    title: "EBU6001 Teaching Assistant",
+                    workload: "3h/week",
+                    requirements: "Good English",
+                    deadline: "May 31, 2026",
+                    status: "Closed"
+                },
+                {
+                    id: 3,
+                    title: "EBU6201 Teaching Assistant",
+                    workload: "4h/week",
+                    requirements: "Python Programming",
+                    deadline: "May 31, 2026",
+                    status: "Open"
+                }
+            ];
+        }
+
+        function getJobs() {
+            let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+            if (jobs.length === 0) {
+                jobs = getDefaultJobs();
+                localStorage.setItem("jobs", JSON.stringify(jobs));
+            }
+            return jobs;
+        }
+
+        function enrichJob(job) {
+            const fallback = {
+                salary: "¥120-180 / hour",
+                experience: "0-2 years",
+                education: "Bachelor or above",
+                location: "BUPT Campus",
+                companyLogo: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=academic%20institution%20logo%20blue&image_size=square",
+                companyName: "BUPT International School",
+                companySize: "1000+ employees",
+                companyIndustry: "Higher Education",
+                responsibilities: "Assist lecturers in tutorial preparation.\nSupport classroom Q&A and assignment grading.\nCoordinate office-hour consultations.",
+                requirementsDetail: "Strong communication and teamwork skills.\nReliable attendance and responsibility.\nCourse background aligned with the module.",
+                content: "Lead tutorial practice sessions.\nMaintain attendance and learning records.\nProvide weekly teaching feedback to module organizer."
+            };
+
+            return {
+                ...job,
+                salary: job.salary || fallback.salary,
+                experience: job.experience || fallback.experience,
+                education: job.education || fallback.education,
+                location: job.location || fallback.location,
+                companyLogo: job.companyLogo || fallback.companyLogo,
+                companyName: job.companyName || fallback.companyName,
+                companySize: job.companySize || fallback.companySize,
+                companyIndustry: job.companyIndustry || fallback.companyIndustry,
+                responsibilities: job.responsibilities || ("Course: " + job.title + "\n" + fallback.responsibilities),
+                requirementsDetail: job.requirementsDetail || (job.requirements ? (job.requirements + "\n" + fallback.requirementsDetail) : fallback.requirementsDetail),
+                content: job.content || ("Weekly workload: " + (job.workload || "-") + "\nDeadline: " + (job.deadline || "-") + "\n" + fallback.content)
+            };
+        }
+
+        let currentJob = null;
+
+        function getJobFromQueryOrStorage(jobs) {
+            const params = new URLSearchParams(window.location.search);
+            const queryId = params.get("id");
+            const storedId = localStorage.getItem("currentJobId");
+            const targetId = queryId || storedId;
+
+            if (targetId) {
+                const found = jobs.find(j => String(j.id) === String(targetId));
+                if (found) {
+                    return found;
+                }
+            }
+            return jobs[0];
+        }
+
+        function renderJobHeader(job) {
+            document.getElementById("jobTitle").textContent = job.title || "-";
+            document.getElementById("jobSalary").textContent = "Salary: " + job.salary;
+            document.getElementById("jobExperience").textContent = "Experience: " + job.experience;
+            document.getElementById("jobEducation").textContent = "Education: " + job.education;
+            document.getElementById("jobLocation").textContent = "Location: " + job.location;
+        }
+
+        function renderCompany(job) {
+            document.getElementById("companyLogo").src = job.companyLogo;
+            document.getElementById("companyName").textContent = job.companyName;
+            document.getElementById("companySize").textContent = "规模：" + job.companySize;
+            document.getElementById("companyIndustry").textContent = "行业：" + job.companyIndustry;
+        }
+
+        function renderDetails(job) {
+            document.getElementById("jobResponsibilities").textContent = job.responsibilities;
+            document.getElementById("jobRequirements").textContent = job.requirementsDetail;
+            document.getElementById("jobContent").textContent = job.content;
+        }
+
+        function renderSimilarJobs(jobs, job) {
+            const container = document.getElementById("similarJobsContainer");
+            const normalizedTitle = (job.title || "").toLowerCase();
+            const byKeyword = jobs.filter(j => j.id !== job.id && (j.title || "").toLowerCase().includes("teaching assistant"));
+            const byStatus = jobs.filter(j => j.id !== job.id && j.status === "Open");
+            const merged = [...byKeyword, ...byStatus];
+            const unique = [];
+            const idSet = {};
+
+            for (let i = 0; i < merged.length; i++) {
+                const item = merged[i];
+                if (!idSet[item.id]) {
+                    idSet[item.id] = true;
+                    unique.push(item);
+                }
+            }
+
+            const extra = jobs.filter(j => j.id !== job.id && (j.title || "").toLowerCase() !== normalizedTitle);
+            for (let k = 0; k < extra.length && unique.length < 4; k++) {
+                if (!idSet[extra[k].id]) {
+                    idSet[extra[k].id] = true;
+                    unique.push(extra[k]);
+                }
+            }
+
+            if (unique.length === 0) {
+                container.innerHTML = "<p>No similar positions for now.</p>";
+                return;
+            }
+
+            let html = "";
+            unique.slice(0, 4).forEach(item => {
+                html += `
+                    <div class="similar-item">
+                        <h4>${item.title}</h4>
+                        <p>Workload: ${item.workload || "-"}</p>
+                        <p>Status: ${item.status || "-"}</p>
+                        <button class="btn btn-secondary" onclick="viewAnotherJob(${item.id})">查看详情</button>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function searchJobs() {
+            const keyword = document.getElementById("searchInput").value.trim().toLowerCase();
+            const jobs = getJobs().map(enrichJob);
+            const resultEl = document.getElementById("searchResults");
+
+            if (!keyword) {
+                resultEl.innerHTML = "<p>请输入关键词进行模糊筛选。</p>";
+                return;
+            }
+
+            const filtered = jobs.filter(job => {
+                const fields = [
+                    job.title,
+                    job.requirements,
+                    job.requirementsDetail,
+                    job.location,
+                    job.education,
+                    job.companyName
+                ].join(" ").toLowerCase();
+                return fields.indexOf(keyword) !== -1;
+            });
+
+            if (filtered.length === 0) {
+                resultEl.innerHTML = "<p>No matching jobs found.</p>";
+                return;
+            }
+
+            let html = "";
+            filtered.forEach(job => {
+                html += `
+                    <div class="result-item">
+                        <span>${job.title} | ${job.location} | ${job.education}</span>
+                        <button class="btn btn-primary" onclick="viewAnotherJob(${job.id})">进入详情</button>
+                    </div>
+                `;
+            });
+            resultEl.innerHTML = html;
+        }
+
+        function viewAnotherJob(jobId) {
+            localStorage.setItem("currentJobId", String(jobId));
+            window.location.href = "job_detail.html?id=" + encodeURIComponent(jobId);
+        }
+
+        function goPersonalCenter() {
+            window.location.href = "personal_center.html";
+        }
+
+        function applyNow() {
+            if (!currentJob) return;
+            if (currentJob.status !== "Open") {
+                alert("This position is currently closed.");
+                return;
+            }
+
+            let applications = JSON.parse(localStorage.getItem("applications")) || [];
+            const username = localStorage.getItem("username");
+            const duplicate = applications.some(app => app.jobId == currentJob.id && app.applicantName === username);
+            if (duplicate) {
+                alert("You have already applied for this position.");
+                return;
+            }
+
+            applications.push({
+                jobId: currentJob.id,
+                jobTitle: currentJob.title,
+                applicantName: username,
+                date: new Date().toISOString(),
+                status: "Pending"
+            });
+            localStorage.setItem("applications", JSON.stringify(applications));
+            alert("Application submitted successfully!");
+        }
+
+        function getFavoritesKey() {
+            return "favoriteJobs_" + (localStorage.getItem("username") || "guest");
+        }
+
+        function updateFavoriteButton() {
+            if (!currentJob) return;
+            const favorites = JSON.parse(localStorage.getItem(getFavoritesKey())) || [];
+            const exists = favorites.some(item => item.jobId == currentJob.id);
+            document.getElementById("favoriteBtn").textContent = exists ? "已收藏（点击取消）" : "收藏职位";
+        }
+
+        function toggleFavorite() {
+            if (!currentJob) return;
+            let favorites = JSON.parse(localStorage.getItem(getFavoritesKey())) || [];
+            const index = favorites.findIndex(item => item.jobId == currentJob.id);
+
+            if (index >= 0) {
+                favorites.splice(index, 1);
+                alert("Removed from favorites.");
+            } else {
+                favorites.push({
+                    jobId: currentJob.id,
+                    title: currentJob.title,
+                    date: new Date().toISOString()
+                });
+                alert("Added to favorites.");
+            }
+
+            localStorage.setItem(getFavoritesKey(), JSON.stringify(favorites));
+            updateFavoriteButton();
+        }
+
+        function openCompanyModal() {
+            if (!currentJob) return;
+            const content =
+                "Company: " + currentJob.companyName + "\n" +
+                "Industry: " + currentJob.companyIndustry + "\n" +
+                "Size: " + currentJob.companySize + "\n\n" +
+                "Position: " + currentJob.title + "\n" +
+                "Salary: " + currentJob.salary + "\n" +
+                "Experience: " + currentJob.experience + "\n" +
+                "Education: " + currentJob.education + "\n" +
+                "Location: " + currentJob.location + "\n" +
+                "Deadline: " + (currentJob.deadline || "-") + "\n\n" +
+                "Responsibilities:\n" + currentJob.responsibilities + "\n\n" +
+                "Requirements:\n" + currentJob.requirementsDetail + "\n\n" +
+                "Work Content:\n" + currentJob.content;
+
+            document.getElementById("companyModalContent").textContent = content;
+            document.getElementById("companyModal").style.display = "flex";
+        }
+
+        function closeCompanyModal() {
+            document.getElementById("companyModal").style.display = "none";
+        }
+
+        window.onclick = function(evt) {
+            const mask = document.getElementById("companyModal");
+            if (evt.target === mask) {
+                closeCompanyModal();
+            }
+        };
+
+        function initPage() {
+            checkSession();
+            const jobs = getJobs();
+            currentJob = enrichJob(getJobFromQueryOrStorage(jobs));
+            localStorage.setItem("currentJobId", String(currentJob.id));
+
+            renderJobHeader(currentJob);
+            renderCompany(currentJob);
+            renderDetails(currentJob);
+            renderSimilarJobs(jobs.map(enrichJob), currentJob);
+            updateFavoriteButton();
+        }
+
+        window.onload = initPage;
+    </script>
+</body>
+</html>

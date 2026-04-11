@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Available Jobs</title>
+    <style>
+        /* QMUL website style */
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            color: #333333;
+        }
+        
+        .header {
+            background-color: #003366;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .chat-entry {
+            position: absolute;
+            right: 24px;
+            top: 20px;
+            background-color: #ffffff;
+            color: #003366;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            padding: 8px 14px;
+            cursor: pointer;
+        }
+
+        .chat-badge {
+            position: absolute;
+            right: -8px;
+            top: -8px;
+            min-width: 18px;
+            height: 18px;
+            background-color: #dc3545;
+            border-radius: 999px;
+            display: none;
+            color: #fff;
+            font-size: 11px;
+            line-height: 18px;
+            text-align: center;
+            padding: 0 4px;
+            box-sizing: border-box;
+        }
+
+        .personal-center-entry {
+            position: absolute;
+            left: 24px;
+            top: 20px;
+            background-color: #ffffff;
+            color: #003366;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            padding: 8px 14px;
+            cursor: pointer;
+        }
+        
+        .container {
+            width: 700px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            text-align: center;
+            margin-top: 0;
+            color: #003366;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .job-card {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #003366;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .job-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .job-card h4 {
+            color: #003366;
+            margin: 0 0 15px 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .job-info {
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .job-info p {
+            margin: 5px 0;
+        }
+        
+        .job-info span {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        button {
+            margin: 10px 5px 0 0;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: #003366;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #002244;
+        }
+        
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #f0f0f0;
+            font-size: 12px;
+            color: #666;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        .search-card {
+            background-color: white;
+            padding: 18px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+
+        .search-card h3 {
+            margin: 0 0 10px 0;
+            color: #003366;
+            font-size: 18px;
+        }
+
+        .search-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-group input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .search-group input:focus {
+            outline: none;
+            border-color: #003366;
+            box-shadow: 0 0 0 2px rgba(0,51,102,0.1);
+        }
+        
+        .no-jobs {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .job-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .chat-modal-mask {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.45);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .chat-modal {
+            width: 720px;
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 24px rgba(0,0,0,0.2);
+        }
+
+        .chat-modal-header {
+            background-color: #003366;
+            color: #fff;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-modal-body {
+            padding: 14px;
+        }
+
+        .chat-meta {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .chat-messages {
+            height: 280px;
+            overflow-y: auto;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            padding: 10px;
+            background-color: #fafafa;
+            margin-bottom: 10px;
+        }
+
+        .chat-item {
+            margin-bottom: 8px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .chat-item.mine {
+            color: #003366;
+        }
+
+        .chat-send-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-send-row input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button class="personal-center-entry" onclick="goPersonalCenter()">Personal Center</button>
+        <h1>TA Recruitment System</h1>
+        <p>Queen Mary University of London - Beijing University of Posts and Telecommunications</p>
+        <button class="chat-entry" onclick="openTopChat()">
+            Chat
+            <span class="chat-badge" id="chatUnreadBadge"></span>
+        </button>
+    </div>
+    
+    <style>
+        /* Dynamic background */
+        body {
+            background: linear-gradient(-45deg, #e6f2ff, #ffffff, #e6f2ff, #ffffff);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+    </style>
+    
+    <div class="container">
+        <h2>Available TA Jobs</h2>
+
+        <div class="search-card">
+            <h3>Job Search (Fuzzy Filter)</h3>
+            <div class="search-group">
+                <input type="text" id="jobSearchInput" placeholder="Search by title / requirements / status / workload / deadline">
+                <button class="btn-primary" onclick="searchJobs()">Search</button>
+                <button class="btn-secondary" onclick="resetSearch()">Reset</button>
+            </div>
+        </div>
+        
+        <div id="jobsContainer">
+            <!-- Jobs will be dynamically inserted here -->
+        </div>
+        
+        <div class="navigation">
+            <button class="btn-secondary" onclick="window.location.href='profile.html'">Back to Profile</button>
+            <button class="btn-secondary" onclick="window.location.href='application_records.html'">Application Records</button>
+            <button class="btn-danger" onclick="logout()">Logout</button>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>© 2026 BUPT International School. All rights reserved.</p>
+    </div>
+
+    <script>
+        // Check session
+        // 检查会话
+        function checkSession() {
+            if (!localStorage.getItem("username")) {
+                window.location.href = "login.html";
+            }
+        }
+        
+        function getJobsData() {
+            let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+            
+            if (jobs.length === 0) {
+                jobs = [
+                    {
+                        id: 1,
+                        title: "EBU6304 Teaching Assistant",
+                        workload: "5h/week",
+                        requirements: "Basic Programming",
+                        deadline: "May 31, 2026",
+                        status: "Open"
+                    },
+                    {
+                        id: 2,
+                        title: "EBU6001 Teaching Assistant",
+                        workload: "3h/week",
+                        requirements: "Good English",
+                        deadline: "May 31, 2026",
+                        status: "Closed"
+                    },
+                    {
+                        id: 3,
+                        title: "EBU6201 Teaching Assistant",
+                        workload: "4h/week",
+                        requirements: "Python Programming",
+                        deadline: "May 31, 2026",
+                        status: "Open"
+                    }
+                ];
+                localStorage.setItem("jobs", JSON.stringify(jobs));
+            }
+            return jobs;
+        }
+
+        function renderJobs(jobs) {
+            let jobsContainer = document.getElementById("jobsContainer");
+
+            if (jobs.length === 0) {
+                jobsContainer.innerHTML = '<div class="no-jobs">No jobs available at the moment.</div>';
+                return;
+            }
+
+            let jobsHTML = '';
+            jobs.forEach((job, index) => {
+                let buttonClass = job.status === "Open" ? "btn-primary" : "btn-secondary";
+                let buttonText = job.status === "Open" ? "View Details & Apply" : "Position Closed";
+                let buttonAction = job.status === "Open" ? `onclick="viewJobDetail(${job.id})"` : `onclick="alert('This position is closed!')"`;
+                
+                jobsHTML += `
+                    <div class="job-card">
+                        <h4>${index + 1}. ${job.title}</h4>
+                        <div class="job-info">
+                            <p><span>Workload:</span> ${job.workload}</p>
+                            <p><span>Requirements:</span> ${job.requirements}</p>
+                            <p><span>Deadline:</span> ${job.deadline}</p>
+                            <p><span>Status:</span> ${job.status}</p>
+                        </div>
+                        <div class="job-actions">
+                            <button class="${buttonClass}" ${buttonAction}>${buttonText}</button>
+                            <button class="btn-secondary" onclick="openConsultChat(${job.id}, '${job.title.replace(/'/g, "\\'")}')">Consult</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            jobsContainer.innerHTML = jobsHTML;
+        }
+
+        // Load jobs
+        // 加载职位
+        function loadJobs() {
+            let jobs = getJobsData();
+            renderJobs(jobs);
+        }
+
+        // Search jobs with fuzzy match
+        // 职位模糊搜索
+        function searchJobs() {
+            let keyword = document.getElementById("jobSearchInput").value.trim().toLowerCase();
+            let jobs = getJobsData();
+
+            if (!keyword) {
+                renderJobs(jobs);
+                return;
+            }
+
+            let filteredJobs = jobs.filter(job => {
+                let searchableText = [
+                    job.title,
+                    job.requirements,
+                    job.status,
+                    job.workload,
+                    job.deadline
+                ].join(" ").toLowerCase();
+
+                return searchableText.includes(keyword);
+            });
+
+            renderJobs(filteredJobs);
+        }
+
+        // Reset search and show all jobs
+        // 重置搜索并显示全部职位
+        function resetSearch() {
+            document.getElementById("jobSearchInput").value = "";
+            loadJobs();
+        }
+        
+        // View job detail
+        // 查看职位详情
+        function viewJobDetail(jobId) {
+            localStorage.setItem("currentJobId", jobId);
+            window.location.href = "job_detail.html?id=" + encodeURIComponent(jobId);
+        }
+
+        function goPersonalCenter() {
+            window.location.href = "personal_center.html";
+        }
+
+        function getChatMessages() {
+            return JSON.parse(localStorage.getItem("chatMessages")) || [];
+        }
+
+        function saveChatMessages(messages) {
+            localStorage.setItem("chatMessages", JSON.stringify(messages));
+        }
+
+        function getUnreadCount() {
+            let role = localStorage.getItem("role");
+            let username = localStorage.getItem("username");
+            let messages = getChatMessages();
+            return messages.filter(msg => msg.toRole === role && msg.toUser === username && !msg.read).length;
+        }
+
+        function refreshUnreadBadge() {
+            let badge = document.getElementById("chatUnreadBadge");
+            let count = getUnreadCount();
+            if (count > 0) {
+                badge.style.display = "inline-block";
+                badge.textContent = count > 99 ? "99+" : String(count);
+            } else {
+                badge.style.display = "none";
+                badge.textContent = "";
+            }
+        }
+
+        let activeChat = { jobId: null, jobTitle: "", taUser: null };
+
+        function openConsultChat(jobId, jobTitle) {
+            let username = localStorage.getItem("username");
+            activeChat = { jobId: jobId, jobTitle: jobTitle, taUser: username };
+            localStorage.setItem("chatSelectedThread", JSON.stringify(activeChat));
+            window.location.href = "chat_list.html";
+        }
+
+        function openTopChat() {
+            let username = localStorage.getItem("username");
+            let messages = getChatMessages();
+            let mine = messages.filter(m => m.taUser === username);
+            if (mine.length === 0) {
+                localStorage.removeItem("chatSelectedThread");
+                window.location.href = "chat_list.html";
+                return;
+            }
+            let last = mine[mine.length - 1];
+            activeChat = { jobId: last.jobId, jobTitle: last.jobTitle, taUser: username };
+            localStorage.setItem("chatSelectedThread", JSON.stringify(activeChat));
+            window.location.href = "chat_list.html";
+        }
+
+        function openChatModal() {
+            document.getElementById("chatModalMask").style.display = "flex";
+            document.getElementById("chatMeta").textContent = "Job: " + activeChat.jobTitle + " | TA: " + activeChat.taUser;
+            renderChatMessages();
+            markThreadAsRead();
+        }
+
+        function closeChatModal() {
+            document.getElementById("chatModalMask").style.display = "none";
+            refreshUnreadBadge();
+        }
+
+        function getCurrentThreadMessages() {
+            let messages = getChatMessages();
+            return messages.filter(msg =>
+                String(msg.jobId) === String(activeChat.jobId) &&
+                msg.taUser === activeChat.taUser
+            );
+        }
+
+        function renderChatMessages() {
+            let role = localStorage.getItem("role");
+            let username = localStorage.getItem("username");
+            let thread = getCurrentThreadMessages();
+            let box = document.getElementById("chatMessages");
+
+            if (thread.length === 0) {
+                box.innerHTML = "<div class='chat-item'>No messages yet. Start consulting.</div>";
+                return;
+            }
+
+            let html = "";
+            thread.forEach(msg => {
+                let mine = msg.fromRole === role && msg.fromUser === username;
+                let cls = mine ? "chat-item mine" : "chat-item";
+                let time = new Date(msg.time).toLocaleString();
+                html += `<div class="${cls}"><strong>${msg.fromUser}</strong> (${time}): ${msg.text}</div>`;
+            });
+            box.innerHTML = html;
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function markThreadAsRead() {
+            let role = localStorage.getItem("role");
+            let username = localStorage.getItem("username");
+            let messages = getChatMessages();
+            let changed = false;
+
+            messages.forEach(msg => {
+                if (
+                    String(msg.jobId) === String(activeChat.jobId) &&
+                    msg.taUser === activeChat.taUser &&
+                    msg.toRole === role &&
+                    msg.toUser === username &&
+                    !msg.read
+                ) {
+                    msg.read = true;
+                    changed = true;
+                }
+            });
+
+            if (changed) {
+                saveChatMessages(messages);
+            }
+            refreshUnreadBadge();
+        }
+
+        function sendChatMessage() {
+            let role = localStorage.getItem("role");
+            let username = localStorage.getItem("username");
+            let input = document.getElementById("chatInput");
+            let text = input.value.trim();
+            if (!text) return;
+
+            let messages = getChatMessages();
+            messages.push({
+                jobId: activeChat.jobId,
+                jobTitle: activeChat.jobTitle,
+                taUser: activeChat.taUser,
+                fromRole: role,
+                fromUser: username,
+                toRole: "mo",
+                toUser: "mo",
+                text: text,
+                time: new Date().toISOString(),
+                read: false
+            });
+            saveChatMessages(messages);
+            input.value = "";
+            renderChatMessages();
+            refreshUnreadBadge();
+        }
+        
+        // Logout
+        // 登出
+        function logout() {
+            localStorage.removeItem("username");
+            localStorage.removeItem("role");
+            window.location.href = "login.html";
+        }
+        
+        // Check session and load jobs on page load
+        // 页面加载时检查会话和加载职位
+        window.onload = function() {
+            checkSession();
+            loadJobs();
+            document.getElementById("jobSearchInput").addEventListener("input", searchJobs);
+            refreshUnreadBadge();
+        };
+    </script>
+
+    <div class="chat-modal-mask" id="chatModalMask">
+        <div class="chat-modal">
+            <div class="chat-modal-header">
+                <strong>Consultation Chat</strong>
+                <button class="btn-secondary" onclick="closeChatModal()">Close</button>
+            </div>
+            <div class="chat-modal-body">
+                <div class="chat-meta" id="chatMeta"></div>
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-send-row">
+                    <input type="text" id="chatInput" placeholder="Type your message to MO">
+                    <button class="btn-primary" onclick="sendChatMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
