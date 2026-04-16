@@ -303,6 +303,7 @@
         <p>© 2026 BUPT International School. All rights reserved.</p>
     </div>
 
+    <script src="feedback-ui.js"></script>
     <script>
         // Check session
         // 检查会话
@@ -461,7 +462,7 @@
             if (newEmail) {
                 user.email = newEmail;
                 localStorage.setItem("users", JSON.stringify(users));
-                alert("Account updated successfully!");
+                Feedback.showToast("Account updated successfully.", { variant: "success" });
                 loadAccounts();
             }
         }
@@ -473,7 +474,7 @@
                 let users = JSON.parse(localStorage.getItem("users")) || [];
                 users.splice(index, 1);
                 localStorage.setItem("users", JSON.stringify(users));
-                alert("Account deleted successfully!");
+                Feedback.showToast("Account deleted successfully.", { variant: "success" });
                 loadAccounts();
             }
         }
@@ -612,7 +613,7 @@
                 link.click();
                 document.body.removeChild(link);
             } else {
-                alert("No CV data found.");
+                Feedback.showToast("No CV data found.", { variant: "error" });
             }
         }
         
