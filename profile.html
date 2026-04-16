@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile</title>
+    <style>
+        /* QMUL website style */
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            color: #333333;
+        }
+        
+        .header {
+            background-color: #003366;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .chat-entry {
+            position: absolute;
+            right: 24px;
+            top: 20px;
+            background-color: #ffffff;
+            color: #003366;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            padding: 8px 14px;
+            cursor: pointer;
+        }
+
+        .chat-badge {
+            position: absolute;
+            right: -8px;
+            top: -8px;
+            min-width: 18px;
+            height: 18px;
+            background-color: #dc3545;
+            border-radius: 999px;
+            display: none;
+            color: #fff;
+            font-size: 11px;
+            line-height: 18px;
+            text-align: center;
+            padding: 0 4px;
+            box-sizing: border-box;
+        }
+
+        .personal-center-entry {
+            position: absolute;
+            left: 24px;
+            top: 20px;
+            background-color: #ffffff;
+            color: #003366;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            padding: 8px 14px;
+            cursor: pointer;
+        }
+        
+        .container {
+            width: 600px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            text-align: center;
+            margin-top: 0;
+            color: #003366;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        h3 {
+            color: #666;
+            margin: 10px 0 20px 0;
+            font-size: 16px;
+            font-weight: normal;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input[type="text"],
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: 'Arial', sans-serif;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input[type="text"]:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #003366;
+            box-shadow: 0 0 0 2px rgba(0,51,102,0.1);
+        }
+        
+        .form-group input[type="text"]:disabled {
+            background-color: #f5f5f5;
+            color: #666;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .skills-group {
+            margin: 15px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .skill-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .skill-item:hover {
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            transform: translateY(-1px);
+        }
+        
+        .skill-item input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        
+        .skill-item label {
+            margin: 0;
+            font-weight: normal;
+            cursor: pointer;
+        }
+        
+        .file-upload {
+            margin: 20px 0;
+        }
+        
+        .file-upload input[type="file"] {
+            margin: 10px 0;
+        }
+        
+        button {
+            margin: 10px 5px;
+            padding: 12px 25px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: #003366;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #002244;
+        }
+        
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #f0f0f0;
+            font-size: 12px;
+            color: #666;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        
+        .navigation {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .primary-actions {
+            justify-content: center;
+        }
+        
+        .secondary-actions {
+            justify-content: center;
+        }
+        
+        .btn-primary {
+            background-color: #003366;
+            color: white;
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .chat-modal-mask {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.45);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .chat-modal {
+            width: 720px;
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 24px rgba(0,0,0,0.2);
+        }
+
+        .chat-modal-header {
+            background-color: #003366;
+            color: #fff;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-modal-body {
+            padding: 14px;
+        }
+
+        .chat-meta {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .chat-messages {
+            height: 280px;
+            overflow-y: auto;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            padding: 10px;
+            background-color: #fafafa;
+            margin-bottom: 10px;
+        }
+
+        .chat-item {
+            margin-bottom: 8px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .chat-item.mine {
+            color: #003366;
+        }
+
+        .chat-send-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-send-row input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button class="personal-center-entry" onclick="goPersonalCenter()">Personal Center</button>
+        <h1>TA Recruitment System</h1>
+        <p>Queen Mary University of London - Beijing University of Posts and Telecommunications</p>
+        <button class="chat-entry" onclick="openTopChat()">
+            Chat
+            <span class="chat-badge" id="chatUnreadBadge"></span>
+        </button>
+    </div>
+    
+    <style>
+        /* Dynamic background */
+        body {
+            background: linear-gradient(-45deg, #e6f2ff, #ffffff, #e6f2ff, #ffffff);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+    </style>
+    
+    <div class="container">
+        <h2>My Personal Profile</h2>
+        
+        <div class="form-group">
+            <label>Student ID</label>
+            <input type="text" id="studentId" disabled>
+        </div>
+        
+        <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="fullName" disabled>
+        </div>
+        
+        <div class="form-group">
+            <label>Major</label>
+            <input type="text" id="major" placeholder="Enter your major">
+        </div>
+        
+        <div class="form-group">
+            <label>Skills</label>
+            <div class="skills-group">
+                <div class="skill-item">
+                    <input type="checkbox" value="Java" id="skill-java">
+                    <label for="skill-java">Java</label>
+                </div>
+                <div class="skill-item">
+                    <input type="checkbox" value="English" id="skill-english">
+                    <label for="skill-english">English</label>
+                </div>
+                <div class="skill-item">
+                    <input type="checkbox" value="Python" id="skill-python">
+                    <label for="skill-python">Python</label>
+                </div>
+                <div class="skill-item">
+                    <input type="checkbox" value="C++" id="skill-cpp">
+                    <label for="skill-cpp">C++</label>
+                </div>
+                <div class="skill-item">
+                    <input type="checkbox" value="Web Development" id="skill-web">
+                    <label for="skill-web">Web Development</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label>Teaching Experience</label>
+            <textarea id="experience" placeholder="Enter your teaching experience"></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label>CV Upload</label>
+            <div class="file-upload">
+                <input type="file" id="cvFile" accept=".txt,.csv,.doc,.docx,.pdf">
+                <p id="cvStatus" style="margin-top: 10px; font-size: 14px; color: #666;">No CV uploaded yet</p>
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <div class="button-group primary-actions">
+                <button type="button" class="btn-primary" id="saveProfileBtn" onclick="saveProfile()">Save Profile</button>
+                <button type="button" class="btn-secondary" id="uploadCvBtn" onclick="uploadCV()">Upload CV</button>
+            </div>
+            <div class="button-group secondary-actions">
+                <button class="btn-secondary" onclick="window.location.href='job.html'">Browse Jobs</button>
+                <button class="btn-secondary" onclick="window.location.href='application_records.html'">Application Records</button>
+                <button class="btn-danger" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>© 2026 BUPT International School. All rights reserved.</p>
+    </div>
+
+    <script src="feedback-ui.js"></script>
+    <script>
+        // Check session
+        // 检查会话
+        function checkSession() {
+            if (!localStorage.getItem("username")) {
+                window.location.href = "login.html";
+            }
+        }
+        
+        // Load profile data
+        // 加载档案数据
+        function loadProfile() {
+            // Get current username
+            // 获取当前用户名
+            let username = localStorage.getItem("username");
+            
+            // Get user information from localStorage
+            // 从localStorage获取用户信息
+            let users = JSON.parse(localStorage.getItem("users")) || [];
+            let currentUser = users.find(user => user.studentId === username);
+            
+            // Populate user information
+            // 填充用户信息
+            if (currentUser) {
+                document.getElementById("studentId").value = currentUser.studentId;
+                document.getElementById("fullName").value = currentUser.fullName;
+            }
+            
+            let profile = JSON.parse(localStorage.getItem("profile")) || {};
+            document.getElementById("major").value = profile.major || "";
+            document.getElementById("experience").value = profile.experience || "";
+            
+            // Load skills
+            // 加载技能
+            if (profile.skills) {
+                let checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    if (profile.skills.includes(checkbox.value)) {
+                        checkbox.checked = true;
+                    }
+                });
+            }
+            
+            // Load CV status
+            // 加载CV状态
+            let cvData = localStorage.getItem("cvData");
+            if (cvData) {
+                document.getElementById("cvStatus").textContent = "CV uploaded successfully";
+            }
+        }
+        
+        // Save profile
+        // 保存档案
+        function saveProfile() {
+            let major = document.getElementById("major").value;
+            let experience = document.getElementById("experience").value;
+            
+            // Get selected skills
+            // 获取选中的技能
+            let skills = [];
+            let checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            checkboxes.forEach(checkbox => {
+                skills.push(checkbox.value);
+            });
+            
+            // Validate form data
+            // 验证表单数据
+            if (!major) {
+                Feedback.showToast("Major is required!", { variant: "error" });
+                return;
+            }
+            
+            let saveBtn = document.getElementById("saveProfileBtn");
+            Feedback.setButtonLoading(saveBtn, true, { label: "Saving…" });
+            setTimeout(function () {
+                let profile = {
+                    major: major,
+                    skills: skills,
+                    experience: experience
+                };
+                localStorage.setItem("profile", JSON.stringify(profile));
+                Feedback.showToast("Profile saved. Redirecting to job list…", { variant: "success", duration: 1400 });
+                setTimeout(function () {
+                    window.location.href = "job.html";
+                }, 650);
+            }, 280);
+        }
+        
+        // Upload CV
+        // 上传CV
+        function uploadCV() {
+            let fileInput = document.getElementById("cvFile");
+            let file = fileInput.files[0];
+            
+            if (!file) {
+                Feedback.showToast("Please select a file to upload.", { variant: "error" });
+                return;
+            }
+            
+            // Check file type
+            // 检查文件类型
+            let allowedTypes = ["text/plain", "text/csv", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/pdf"];
+            if (!allowedTypes.includes(file.type)) {
+                Feedback.showToast("Only TXT, CSV, Word, and PDF files are allowed.", { variant: "error" });
+                return;
+            }
+            
+            // Check file size (≤5MB)
+            // 检查文件大小（≤5MB）
+            if (file.size > 5 * 1024 * 1024) {
+                Feedback.showToast("File size must be ≤5MB.", { variant: "error" });
+                return;
+            }
+            
+            let uploadBtn = document.getElementById("uploadCvBtn");
+            Feedback.setButtonLoading(uploadBtn, true, { label: "Uploading…" });
+            
+            // Read file content as base64 for binary files
+            // 以base64格式读取二进制文件内容
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                // Save CV data to localStorage
+                // 保存CV数据到localStorage
+                localStorage.setItem("cvData", e.target.result);
+                localStorage.setItem("cvFileName", file.name);
+                localStorage.setItem("cvFileSize", file.size);
+                localStorage.setItem("cvFileType", file.type);
+                let username = localStorage.getItem("username");
+                if (username) {
+                    localStorage.setItem("cvData_" + username, e.target.result);
+                    localStorage.setItem("cvFileName_" + username, file.name);
+                    localStorage.setItem("cvFileSize_" + username, String(file.size));
+                    localStorage.setItem("cvFileType_" + username, file.type);
+                }
+                
+                document.getElementById("cvStatus").textContent = "CV uploaded successfully: " + file.name;
+                Feedback.setButtonLoading(uploadBtn, false);
+                Feedback.showToast("CV uploaded successfully.", { variant: "success" });
+            };
+            reader.onerror = function () {
+                Feedback.setButtonLoading(uploadBtn, false);
+                Feedback.showToast("Could not read the file. Please try again.", { variant: "error" });
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // Logout
+        // 登出
+        function logout() {
+            localStorage.removeItem("username");
+            localStorage.removeItem("role");
+            window.location.href = "login.html";
+        }
+
+        function goPersonalCenter() {
+            window.location.href = "personal_center.html";
+        }
+
+        function getChatMessages() {
+            return JSON.parse(localStorage.getItem("chatMessages")) || [];
+        }
+
+        function saveChatMessages(messages) {
+            localStorage.setItem("chatMessages", JSON.stringify(messages));
+        }
+
+        function getUnreadCount() {
+            let role = localStorage.getItem("role");
+            let username = localStorage.getItem("username");
+            let messages = getChatMessages();
+            return messages.filter(msg => msg.toRole === role && msg.toUser === username && !msg.read).length;
+        }
+
+        function refreshUnreadBadge() {
+            let badge = document.getElementById("chatUnreadBadge");
+            let count = getUnreadCount();
+            if (count > 0) {
+                badge.style.display = "inline-block";
+                badge.textContent = count > 99 ? "99+" : String(count);
+            } else {
+                badge.style.display = "none";
+                badge.textContent = "";
+            }
+        }
+
+        let activeChat = { jobId: null, jobTitle: "", taUser: null };
+
+        function openTopChat() {
+            let username = localStorage.getItem("username");
+            let messages = getChatMessages();
+            let mine = messages.filter(m => m.taUser === username);
+            if (mine.length === 0) {
+                localStorage.removeItem("chatSelectedThread");
+                window.location.href = "chat_list.html";
+                return;
+            }
+            let last = mine[mine.length - 1];
+            activeChat = { jobId: last.jobId, jobTitle: last.jobTitle, taUser: username };
+            localStorage.setItem("chatSelectedThread", JSON.stringify(activeChat));
+            window.location.href = "chat_list.html";
+        }
+
+        function openChatModal() {
+            document.getElementById("chatModalMask").style.display = "flex";
+            document.getElementById("chatMeta").textContent = "Job: " + activeChat.jobTitle + " | TA: " + activeChat.taUser;
+            renderChatMessages();
+            markThreadAsRead();
+        }
+
+        function closeChatModal() {
+            document.getElementById("chatModalMask").style.display = "none";
+            refreshUnreadBadge();
+        }
+
+        function getCurrentThreadMessages() {
+            let messages = getChatMessages();
+            return messages.filter(msg =>
+                String(msg.jobId) === String(activeChat.jobId) &&
+                msg.taUser === activeChat.taUser
+            );
+        }
+
+        function renderChatMessages() {
+            let role = localStorage.getItem("role");
+            let username = localStorage.getItem("username");
+            let thread = getCurrentThreadMessages();
+            let box = document.getElementById("chatMessages");
+
+            if (thread.length === 0) {
+                box.innerHTML = "<div class='chat-item'>No messages yet.</div>";
+                return;
+            }
+
+            let html = "";
+            thread.forEach(msg => {
+                let mine = msg.fromRole === role && msg.fromUser === username;
+                let cls = mine ? "chat-item mine" : "chat-item";
+                let time = new Date(msg.time).toLocaleString();
+                html += `<div class="${cls}"><strong>${msg.fromUser}</strong> (${time}): ${msg.text}</div>`;
+            });
+            box.innerHTML = html;
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function markThreadAsRead() {
+            let role = localStorage.getItem("role");
+            let username = localStorage.getItem("username");
+            let messages = getChatMessages();
+            let changed = false;
+
+            messages.forEach(msg => {
+                if (
+                    String(msg.jobId) === String(activeChat.jobId) &&
+                    msg.taUser === activeChat.taUser &&
+                    msg.toRole === role &&
+                    msg.toUser === username &&
+                    !msg.read
+                ) {
+                    msg.read = true;
+                    changed = true;
+                }
+            });
+
+            if (changed) {
+                saveChatMessages(messages);
+            }
+            refreshUnreadBadge();
+        }
+
+        function sendChatMessage() {
+            let role = localStorage.getItem("role");
+            let username = localStorage.getItem("username");
+            let input = document.getElementById("chatInput");
+            let text = input.value.trim();
+            if (!text) return;
+
+            let messages = getChatMessages();
+            messages.push({
+                jobId: activeChat.jobId,
+                jobTitle: activeChat.jobTitle,
+                taUser: activeChat.taUser,
+                fromRole: role,
+                fromUser: username,
+                toRole: "mo",
+                toUser: "mo",
+                text: text,
+                time: new Date().toISOString(),
+                read: false
+            });
+            saveChatMessages(messages);
+            input.value = "";
+            renderChatMessages();
+            refreshUnreadBadge();
+        }
+        
+        // Check session and load profile on page load
+        // 页面加载时检查会话和加载档案
+        window.onload = function() {
+            checkSession();
+            loadProfile();
+            refreshUnreadBadge();
+        };
+    </script>
+
+    <div class="chat-modal-mask" id="chatModalMask">
+        <div class="chat-modal">
+            <div class="chat-modal-header">
+                <strong>Consultation Chat</strong>
+                <button class="btn-secondary" onclick="closeChatModal()">Close</button>
+            </div>
+            <div class="chat-modal-body">
+                <div class="chat-meta" id="chatMeta"></div>
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-send-row">
+                    <input type="text" id="chatInput" placeholder="Type your message to MO">
+                    <button class="btn-primary" onclick="sendChatMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

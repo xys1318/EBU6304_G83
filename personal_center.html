@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Center</title>
+    <style>
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            color: #333333;
+            background: linear-gradient(-45deg, #e6f2ff, #ffffff, #e6f2ff, #ffffff);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .header {
+            background-color: #003366;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .container {
+            width: 800px;
+            margin: 30px auto 80px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 24px;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #003366;
+        }
+
+        .avatar-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .avatar-preview {
+            width: 92px;
+            height: 92px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #003366;
+            background-color: #e6f2ff;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px 12px;
+            font-size: 14px;
+        }
+
+        .form-group textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        .button-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 18px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background-color: #003366;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #f0f0f0;
+            font-size: 12px;
+            color: #666;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>TA Recruitment System</h1>
+        <p>Personal Center</p>
+    </div>
+
+    <div class="container">
+        <h2>My Profile Center</h2>
+
+        <div class="avatar-row">
+            <img id="avatarPreview" class="avatar-preview" src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=default%20user%20avatar%20blue%20minimal&image_size=square" alt="Avatar">
+            <div>
+                <input id="avatarInput" type="file" accept="image/*">
+                <div style="font-size:12px;color:#666;margin-top:6px;">Upload avatar image (jpg/png/webp)</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Name</label>
+            <input id="pcName" type="text" placeholder="Enter your name">
+        </div>
+        <div class="form-group">
+            <label>Gender</label>
+            <select id="pcGender">
+                <option value="">Select gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Age</label>
+            <input id="pcAge" type="number" min="1" max="100" placeholder="Enter age">
+        </div>
+        <div class="form-group">
+            <label>Graduated University</label>
+            <input id="pcUniversity" type="text" placeholder="Enter graduated university">
+        </div>
+        <div class="form-group">
+            <label>Work Experience</label>
+            <textarea id="pcWork" placeholder="Describe your work experience"></textarea>
+        </div>
+        <div class="form-group">
+            <label>Project Experience</label>
+            <textarea id="pcProject" placeholder="Describe your project experience"></textarea>
+        </div>
+        <div class="form-group">
+            <label>Honors & Certificates</label>
+            <textarea id="pcHonor" placeholder="List honors and certificates"></textarea>
+        </div>
+
+        <div class="button-row">
+            <button type="button" class="btn btn-primary" id="pcSaveBtn" onclick="savePersonalCenter()">Save</button>
+            <button class="btn btn-secondary" onclick="viewResume()">View Resume</button>
+            <button class="btn btn-secondary" onclick="window.location.href='job.html'">Back to Job List</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2026 BUPT International School. All rights reserved.</p>
+    </div>
+
+    <script src="feedback-ui.js"></script>
+    <script>
+        function checkSession() {
+            const role = localStorage.getItem("role");
+            if (!localStorage.getItem("username") || role !== "ta") {
+                window.location.href = "login.html";
+            }
+        }
+
+        function personalKey() {
+            return "taPersonalCenter_" + localStorage.getItem("username");
+        }
+
+        function getRegisteredUserName() {
+            const username = localStorage.getItem("username");
+            const users = JSON.parse(localStorage.getItem("users")) || [];
+            const currentUser = users.find(u => u.studentId === username);
+            return currentUser ? currentUser.fullName : username;
+        }
+
+        function loadPersonalCenter() {
+            const data = JSON.parse(localStorage.getItem(personalKey())) || {};
+            document.getElementById("pcName").value = data.name || getRegisteredUserName() || "";
+            document.getElementById("pcGender").value = data.gender || "";
+            document.getElementById("pcAge").value = data.age || "";
+            document.getElementById("pcUniversity").value = data.university || "";
+            document.getElementById("pcWork").value = data.workExperience || "";
+            document.getElementById("pcProject").value = data.projectExperience || "";
+            document.getElementById("pcHonor").value = data.honors || "";
+            if (data.avatar) {
+                document.getElementById("avatarPreview").src = data.avatar;
+            }
+        }
+
+        function savePersonalCenter() {
+            const saveBtn = document.getElementById("pcSaveBtn");
+            Feedback.setButtonLoading(saveBtn, true, { label: "Saving…" });
+            setTimeout(function () {
+                const data = JSON.parse(localStorage.getItem(personalKey())) || {};
+                data.name = document.getElementById("pcName").value.trim();
+                data.gender = document.getElementById("pcGender").value;
+                data.age = document.getElementById("pcAge").value.trim();
+                data.university = document.getElementById("pcUniversity").value.trim();
+                data.workExperience = document.getElementById("pcWork").value.trim();
+                data.projectExperience = document.getElementById("pcProject").value.trim();
+                data.honors = document.getElementById("pcHonor").value.trim();
+                localStorage.setItem(personalKey(), JSON.stringify(data));
+                Feedback.setButtonLoading(saveBtn, false);
+                Feedback.showToast("Personal center saved successfully.", { variant: "success" });
+            }, 280);
+        }
+
+        function viewResume() {
+            const username = localStorage.getItem("username");
+            const cvData = localStorage.getItem("cvData_" + username) || localStorage.getItem("cvData");
+            if (!cvData) {
+                Feedback.showToast("No CV found. Please upload a CV on the profile page first.", { variant: "error" });
+                return;
+            }
+            window.open(cvData, "_blank");
+        }
+
+        function bindAvatarUpload() {
+            document.getElementById("avatarInput").addEventListener("change", function() {
+                const file = this.files[0];
+                if (!file) return;
+                if (!file.type.startsWith("image/")) {
+                    Feedback.showToast("Please choose an image file.", { variant: "error" });
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const data = JSON.parse(localStorage.getItem(personalKey())) || {};
+                    data.avatar = e.target.result;
+                    localStorage.setItem(personalKey(), JSON.stringify(data));
+                    document.getElementById("avatarPreview").src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        window.onload = function() {
+            checkSession();
+            loadPersonalCenter();
+            bindAvatarUpload();
+        };
+    </script>
+</body>
+</html>

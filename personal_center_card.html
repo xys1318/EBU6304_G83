@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TA Profile Card</title>
+    <style>
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            color: #333333;
+            background: linear-gradient(-45deg, #e6f2ff, #ffffff, #e6f2ff, #ffffff);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .header {
+            background-color: #003366;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .container {
+            width: 860px;
+            margin: 30px auto 80px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 24px;
+        }
+
+        .top {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .avatar {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #003366;
+            background-color: #e6f2ff;
+        }
+
+        .name {
+            margin: 0 0 6px 0;
+            color: #003366;
+            font-size: 24px;
+        }
+
+        .meta {
+            margin: 4px 0;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .card {
+            background-color: white;
+            border-left: 4px solid #003366;
+            border-radius: 8px;
+            padding: 14px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+
+        .card h3 {
+            margin: 0 0 8px 0;
+            color: #003366;
+            font-size: 16px;
+        }
+
+        .card p {
+            margin: 0;
+            color: #444;
+            font-size: 14px;
+            line-height: 1.7;
+            white-space: pre-line;
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        .btn-row {
+            margin-top: 16px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background-color: #003366;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #f0f0f0;
+            font-size: 12px;
+            color: #666;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>TA Recruitment System</h1>
+        <p>TA Profile Card (Read-only)</p>
+    </div>
+
+    <div class="container">
+        <div class="top">
+            <img id="avatar" class="avatar" src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=default%20user%20avatar%20blue%20minimal&image_size=square" alt="Avatar">
+            <div>
+                <h2 id="name" class="name">-</h2>
+                <p id="baseInfo" class="meta">Gender: - | Age: - | Student ID: -</p>
+                <p id="uniInfo" class="meta">Graduated University: -</p>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h3>Work Experience</h3>
+                <p id="workExp">Not specified</p>
+            </div>
+            <div class="card">
+                <h3>Project Experience</h3>
+                <p id="projectExp">Not specified</p>
+            </div>
+            <div class="card full">
+                <h3>Honors & Certificates</h3>
+                <p id="honors">Not specified</p>
+            </div>
+        </div>
+
+        <div class="btn-row">
+            <button class="btn btn-primary" onclick="viewResume()">View Resume</button>
+            <button class="btn btn-secondary" onclick="goBack()">Back</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2026 BUPT International School. All rights reserved.</p>
+    </div>
+
+    <script src="feedback-ui.js"></script>
+    <script>
+        let currentTa = "";
+
+        function checkSession() {
+            const role = localStorage.getItem("role");
+            if (!localStorage.getItem("username") || (role !== "mo" && role !== "admin")) {
+                window.location.href = "login.html";
+            }
+        }
+
+        function getQueryTa() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get("ta") || "";
+        }
+
+        function loadCard() {
+            currentTa = getQueryTa();
+            if (!currentTa) {
+                Feedback.showToast("No TA specified.", { variant: "error" });
+                setTimeout(goBack, 900);
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem("users")) || [];
+            const user = users.find(u => u.studentId === currentTa);
+            const personal = JSON.parse(localStorage.getItem("taPersonalCenter_" + currentTa)) || {};
+
+            document.getElementById("name").textContent = personal.name || (user ? user.fullName : currentTa);
+            document.getElementById("baseInfo").textContent =
+                "Gender: " + (personal.gender || "-") +
+                " | Age: " + (personal.age || "-") +
+                " | Student ID: " + currentTa;
+            document.getElementById("uniInfo").textContent = "Graduated University: " + (personal.university || "-");
+            document.getElementById("workExp").textContent = personal.workExperience || "Not specified";
+            document.getElementById("projectExp").textContent = personal.projectExperience || "Not specified";
+            document.getElementById("honors").textContent = personal.honors || "Not specified";
+            if (personal.avatar) {
+                document.getElementById("avatar").src = personal.avatar;
+            }
+        }
+
+        function viewResume() {
+            if (!currentTa) return;
+            const perUserCv = localStorage.getItem("cvData_" + currentTa);
+            const legacyCv = localStorage.getItem("cvData");
+            const cvData = perUserCv || legacyCv;
+            if (!cvData) {
+                Feedback.showToast("No CV available for this TA.", { variant: "error" });
+                return;
+            }
+            window.open(cvData, "_blank");
+        }
+
+        function goBack() {
+            const role = localStorage.getItem("role");
+            if (role === "mo") {
+                window.location.href = "mo_dashboard.html";
+            } else {
+                window.location.href = "admin_dashboard.html";
+            }
+        }
+
+        window.onload = function() {
+            checkSession();
+            loadCard();
+        };
+    </script>
+</body>
+</html>

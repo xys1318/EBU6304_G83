@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultation Chats</title>
+    <style>
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            color: #333333;
+            background: linear-gradient(-45deg, #e6f2ff, #ffffff, #e6f2ff, #ffffff);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .header {
+            background-color: #003366;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .personal-center-entry {
+            position: absolute;
+            left: 24px;
+            top: 20px;
+            background-color: #ffffff;
+            color: #003366;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            padding: 8px 14px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .container {
+            width: 1100px;
+            margin: 30px auto 80px;
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 16px;
+        }
+
+        .card {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 16px;
+        }
+
+        .title {
+            margin: 0 0 12px 0;
+            color: #003366;
+            font-size: 20px;
+        }
+
+        .thread-list {
+            max-height: 540px;
+            overflow-y: auto;
+        }
+
+        .thread-item {
+            background: #fff;
+            border-radius: 6px;
+            border-left: 4px solid #003366;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .thread-item.active {
+            outline: 2px solid rgba(0,51,102,0.2);
+        }
+
+        .thread-item h4 {
+            margin: 0 0 6px 0;
+            color: #003366;
+            font-size: 15px;
+        }
+
+        .thread-item p {
+            margin: 2px 0;
+            color: #555;
+            font-size: 13px;
+        }
+
+        .unread-badge {
+            display: inline-block;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 999px;
+            background-color: #dc3545;
+            color: white;
+            font-size: 11px;
+            line-height: 18px;
+            text-align: center;
+            padding: 0 4px;
+            box-sizing: border-box;
+        }
+
+        .chat-meta {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .messages {
+            height: 430px;
+            overflow-y: auto;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            background: #fafafa;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .msg {
+            margin-bottom: 8px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .msg.mine {
+            color: #003366;
+        }
+
+        .send-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .send-row input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 4px;
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: #003366;
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .toolbar {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #f0f0f0;
+            font-size: 12px;
+            color: #666;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button id="personalCenterBtn" class="personal-center-entry" onclick="goPersonalCenter()">Personal Center</button>
+        <h1>TA Recruitment System</h1>
+        <p>Consultation Chat List</p>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h3 class="title">Conversations</h3>
+            <div id="threadList" class="thread-list"></div>
+        </div>
+
+        <div class="card">
+            <h3 class="title">Chat Window</h3>
+            <div id="chatMeta" class="chat-meta">Select a conversation from the left.</div>
+            <div id="messages" class="messages"></div>
+            <div class="send-row">
+                <input id="chatInput" type="text" placeholder="Type your message">
+                <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+            </div>
+            <div class="toolbar">
+                <button class="btn btn-secondary" onclick="goBack()">Back</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2026 BUPT International School. All rights reserved.</p>
+    </div>
+
+    <script>
+        let selectedThreadKey = "";
+        let selectedThread = null;
+
+        function checkSession() {
+            if (!localStorage.getItem("username")) {
+                window.location.href = "login.html";
+            }
+        }
+
+        function getMessages() {
+            return JSON.parse(localStorage.getItem("chatMessages")) || [];
+        }
+
+        function saveMessages(messages) {
+            localStorage.setItem("chatMessages", JSON.stringify(messages));
+        }
+
+        function getCurrentUser() {
+            return {
+                username: localStorage.getItem("username"),
+                role: localStorage.getItem("role")
+            };
+        }
+
+        function threadKey(jobId, taUser) {
+            return String(jobId) + "::" + taUser;
+        }
+
+        function buildThreads() {
+            const { username, role } = getCurrentUser();
+            const messages = getMessages();
+            const map = {};
+
+            messages.forEach(msg => {
+                const involved = role === "mo"
+                    ? (msg.fromRole === "mo" || msg.toRole === "mo")
+                    : (msg.taUser === username);
+                if (!involved) return;
+
+                const key = threadKey(msg.jobId, msg.taUser);
+                if (!map[key]) {
+                    map[key] = {
+                        jobId: msg.jobId,
+                        taUser: msg.taUser,
+                        jobTitle: msg.jobTitle || ("Job " + msg.jobId),
+                        latestTime: msg.time,
+                        unread: 0
+                    };
+                }
+                if (new Date(msg.time) > new Date(map[key].latestTime)) {
+                    map[key].latestTime = msg.time;
+                    map[key].jobTitle = msg.jobTitle || map[key].jobTitle;
+                }
+                if (msg.toRole === role && msg.toUser === username && !msg.read) {
+                    map[key].unread += 1;
+                }
+            });
+
+            const selectedRaw = localStorage.getItem("chatSelectedThread");
+            if (selectedRaw) {
+                const selected = JSON.parse(selectedRaw);
+                const key = threadKey(selected.jobId, selected.taUser);
+                if (!map[key]) {
+                    map[key] = {
+                        jobId: selected.jobId,
+                        taUser: selected.taUser,
+                        jobTitle: selected.jobTitle || ("Job " + selected.jobId),
+                        latestTime: new Date().toISOString(),
+                        unread: 0
+                    };
+                }
+            }
+
+            return Object.values(map).sort((a, b) => new Date(b.latestTime) - new Date(a.latestTime));
+        }
+
+        function renderThreadList() {
+            const list = document.getElementById("threadList");
+            const threads = buildThreads();
+            if (threads.length === 0) {
+                list.innerHTML = "<p>No conversations yet.</p>";
+                selectedThread = null;
+                selectedThreadKey = "";
+                renderMessages();
+                return;
+            }
+
+            let html = "";
+            threads.forEach(thread => {
+                const key = threadKey(thread.jobId, thread.taUser);
+                const activeClass = selectedThreadKey === key ? "active" : "";
+                const unreadHtml = thread.unread > 0 ? ` <span class="unread-badge">${thread.unread > 99 ? "99+" : thread.unread}</span>` : "";
+                html += `
+                    <div class="thread-item ${activeClass}" onclick="selectThread('${key}', ${thread.jobId}, '${(thread.jobTitle || "").replace(/'/g, "\\'")}', '${thread.taUser.replace(/'/g, "\\'")}')">
+                        <h4>${thread.jobTitle}${unreadHtml}</h4>
+                        <p>TA: ${thread.taUser}</p>
+                        <p>Updated: ${new Date(thread.latestTime).toLocaleString()}</p>
+                    </div>
+                `;
+            });
+            list.innerHTML = html;
+
+            if (!selectedThreadKey) {
+                const selectedRaw = localStorage.getItem("chatSelectedThread");
+                if (selectedRaw) {
+                    const s = JSON.parse(selectedRaw);
+                    selectThread(threadKey(s.jobId, s.taUser), s.jobId, s.jobTitle || ("Job " + s.jobId), s.taUser);
+                } else {
+                    const first = threads[0];
+                    selectThread(threadKey(first.jobId, first.taUser), first.jobId, first.jobTitle, first.taUser);
+                }
+            }
+        }
+
+        function selectThread(key, jobId, jobTitle, taUser) {
+            selectedThreadKey = key;
+            selectedThread = { jobId: jobId, jobTitle: jobTitle, taUser: taUser };
+            localStorage.setItem("chatSelectedThread", JSON.stringify(selectedThread));
+            markThreadAsRead();
+            renderThreadList();
+            renderMessages();
+        }
+
+        function getSelectedMessages() {
+            if (!selectedThread) return [];
+            const messages = getMessages();
+            return messages.filter(msg =>
+                String(msg.jobId) === String(selectedThread.jobId) &&
+                msg.taUser === selectedThread.taUser
+            );
+        }
+
+        function renderMessages() {
+            const box = document.getElementById("messages");
+            const meta = document.getElementById("chatMeta");
+            const { username, role } = getCurrentUser();
+
+            if (!selectedThread) {
+                meta.textContent = "Select a conversation from the left.";
+                box.innerHTML = "";
+                return;
+            }
+
+            meta.textContent = "Job: " + selectedThread.jobTitle + " | TA: " + selectedThread.taUser + " | Role: " + role.toUpperCase();
+            const rows = getSelectedMessages();
+            if (rows.length === 0) {
+                box.innerHTML = "<div class='msg'>No messages yet. Start the conversation.</div>";
+                return;
+            }
+
+            let html = "";
+            rows.forEach(msg => {
+                const mine = msg.fromRole === role && msg.fromUser === username;
+                const cls = mine ? "msg mine" : "msg";
+                html += `<div class="${cls}"><strong>${msg.fromUser}</strong> (${new Date(msg.time).toLocaleString()}): ${msg.text}</div>`;
+            });
+            box.innerHTML = html;
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function markThreadAsRead() {
+            if (!selectedThread) return;
+            const { username, role } = getCurrentUser();
+            const messages = getMessages();
+            let changed = false;
+
+            messages.forEach(msg => {
+                if (
+                    String(msg.jobId) === String(selectedThread.jobId) &&
+                    msg.taUser === selectedThread.taUser &&
+                    msg.toRole === role &&
+                    msg.toUser === username &&
+                    !msg.read
+                ) {
+                    msg.read = true;
+                    changed = true;
+                }
+            });
+
+            if (changed) {
+                saveMessages(messages);
+            }
+        }
+
+        function sendMessage() {
+            if (!selectedThread) return;
+            const input = document.getElementById("chatInput");
+            const text = input.value.trim();
+            if (!text) return;
+
+            const { username, role } = getCurrentUser();
+            const toRole = role === "mo" ? "ta" : "mo";
+            const toUser = role === "mo" ? selectedThread.taUser : "mo";
+            const messages = getMessages();
+
+            messages.push({
+                jobId: selectedThread.jobId,
+                jobTitle: selectedThread.jobTitle,
+                taUser: selectedThread.taUser,
+                fromRole: role,
+                fromUser: username,
+                toRole: toRole,
+                toUser: toUser,
+                text: text,
+                time: new Date().toISOString(),
+                read: false
+            });
+
+            saveMessages(messages);
+            input.value = "";
+            renderThreadList();
+            renderMessages();
+        }
+
+        function goBack() {
+            const role = localStorage.getItem("role");
+            if (role === "mo") {
+                window.location.href = "mo_dashboard.html";
+            } else {
+                window.location.href = "job.html";
+            }
+        }
+
+        function goPersonalCenter() {
+            window.location.href = "personal_center.html";
+        }
+
+        window.onload = function() {
+            checkSession();
+            if (localStorage.getItem("role") === "ta") {
+                document.getElementById("personalCenterBtn").style.display = "inline-block";
+            }
+            renderThreadList();
+            renderMessages();
+        };
+    </script>
+</body>
+</html>
