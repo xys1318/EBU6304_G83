@@ -254,7 +254,7 @@
         </div>
         
         <div class="button-group">
-            <button class="btn-primary" onclick="register()">Submit</button>
+            <button type="button" class="btn-primary" id="registerSubmitBtn" onclick="register()">Submit</button>
             <button class="btn-secondary" onclick="window.location.href='login.html'">Back to Login</button>
         </div>
     </div>
@@ -263,6 +263,7 @@
         <p>© 2026 BUPT International School. All rights reserved.</p>
     </div>
 
+    <script src="feedback-ui.js"></script>
     <script>
         // Register function with form validation
         // 注册函数，带有表单验证
@@ -271,21 +272,22 @@
             let fullName = document.getElementById("fullName").value;
             let email = document.getElementById("email").value;
             let password = document.getElementById("password").value;
+            let submitBtn = document.getElementById("registerSubmitBtn");
             
             // Validate form data
             // 验证表单数据
             if (!studentId) {
-                alert("Student ID is required!");
+                Feedback.showToast("Student ID is required.", { variant: "error" });
                 return;
             }
             
             if (!fullName) {
-                alert("Full Name is required!");
+                Feedback.showToast("Full Name is required.", { variant: "error" });
                 return;
             }
             
             if (!email) {
-                alert("Email is required!");
+                Feedback.showToast("Email is required.", { variant: "error" });
                 return;
             }
             
@@ -293,43 +295,43 @@
             // 验证邮箱格式
             let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
             if (!emailRegex.test(email)) {
-                alert("Please enter a valid email address!");
+                Feedback.showToast("Please enter a valid email address.", { variant: "error" });
                 return;
             }
             
             if (!password) {
-                alert("Password is required!");
+                Feedback.showToast("Password is required.", { variant: "error" });
                 return;
             }
             
             if (password.length < 6) {
-                alert("Password must be at least 6 characters!");
+                Feedback.showToast("Password must be at least 6 characters.", { variant: "error" });
                 return;
             }
             
-            // Save user data to localStorage
-            // 保存用户数据到localStorage
             let users = JSON.parse(localStorage.getItem("users")) || [];
             
-            // Check for duplicate student ID
-            // 检查重复的学生ID
             let isDuplicate = users.some(user => user.studentId === studentId);
             if (isDuplicate) {
-                alert("Student ID already exists!");
+                Feedback.showToast("Student ID already exists.", { variant: "error" });
                 return;
             }
             
-            users.push({
-                studentId: studentId,
-                fullName: fullName,
-                email: email,
-                password: password,
-                role: "ta"
-            });
-            localStorage.setItem("users", JSON.stringify(users));
-            
-            alert("Registration Success! Please Login");
-            window.location.href = "login.html";
+            Feedback.setButtonLoading(submitBtn, true, { label: "Creating account…" });
+            setTimeout(function () {
+                users.push({
+                    studentId: studentId,
+                    fullName: fullName,
+                    email: email,
+                    password: password,
+                    role: "ta"
+                });
+                localStorage.setItem("users", JSON.stringify(users));
+                Feedback.showToast("Registration successful. Redirecting to login…", { variant: "success", duration: 1600 });
+                setTimeout(function () {
+                    window.location.href = "login.html";
+                }, 700);
+            }, 400);
         }
     </script>
 </body>

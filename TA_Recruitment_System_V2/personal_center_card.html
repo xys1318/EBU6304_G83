@@ -189,6 +189,7 @@
         <p>© 2026 BUPT International School. All rights reserved.</p>
     </div>
 
+    <script src="feedback-ui.js"></script>
     <script>
         let currentTa = "";
 
@@ -207,8 +208,8 @@
         function loadCard() {
             currentTa = getQueryTa();
             if (!currentTa) {
-                alert("No TA specified.");
-                goBack();
+                Feedback.showToast("No TA specified.", { variant: "error" });
+                setTimeout(goBack, 900);
                 return;
             }
 
@@ -236,7 +237,7 @@
             const legacyCv = localStorage.getItem("cvData");
             const cvData = perUserCv || legacyCv;
             if (!cvData) {
-                alert("No CV available for this TA.");
+                Feedback.showToast("No CV available for this TA.", { variant: "error" });
                 return;
             }
             window.open(cvData, "_blank");
