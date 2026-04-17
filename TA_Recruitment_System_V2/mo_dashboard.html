@@ -426,7 +426,7 @@
                 <label>Deadline</label>
                 <input type="text" id="deadline" placeholder="Enter deadline (e.g., May 31, 2026)">
             </div>
-            <button class="btn-primary" onclick="postJob()">Post Job</button>
+            <button type="button" class="btn-primary" id="postJobBtn" onclick="postJob()">Post Job</button>
         </div>
         
         <div id="my-jobs" class="tab-content">
@@ -452,6 +452,7 @@
         <p>© 2026 BUPT International School. All rights reserved.</p>
     </div>
 
+    <script src="feedback-ui.js"></script>
     <script>
         // Check session
         // 检查会话
@@ -553,7 +554,7 @@
                     job.status = newStatus;
                     
                     localStorage.setItem("jobs", JSON.stringify(jobs));
-                    alert("Job updated successfully!");
+                    Feedback.showToast("Job updated successfully.", { variant: "success" });
                     loadMyJobs();
                 }
             }
@@ -566,7 +567,7 @@
                 let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
                 jobs = jobs.filter(job => job.id !== jobId);
                 localStorage.setItem("jobs", JSON.stringify(jobs));
-                alert("Job deleted successfully!");
+                Feedback.showToast("Job deleted successfully.", { variant: "success" });
                 loadMyJobs();
             }
         }
@@ -582,34 +583,36 @@
             // Validate form data
             // 验证表单数据
             if (!jobTitle || !workload || !requirements || !deadline) {
-                alert("All fields are required!");
+                Feedback.showToast("All fields are required.", { variant: "error" });
                 return;
             }
             
-            // Save job to localStorage
-            // 保存职位到localStorage
-            let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
-            let jobId = jobs.length + 1;
+            let postBtn = document.getElementById("postJobBtn");
+            Feedback.setButtonLoading(postBtn, true, { label: "Posting…" });
             
-            jobs.push({
-                id: jobId,
-                title: jobTitle,
-                workload: workload + "h/week",
-                requirements: requirements,
-                deadline: deadline,
-                status: "Open"
-            });
-            
-            localStorage.setItem("jobs", JSON.stringify(jobs));
-            
-            alert("Job posted successfully!");
-            
-            // Clear form
-            // 清空表单
-            document.getElementById("jobTitle").value = "";
-            document.getElementById("workload").value = "";
-            document.getElementById("requirements").value = "";
-            document.getElementById("deadline").value = "";
+            setTimeout(function () {
+                let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+                let jobId = jobs.length + 1;
+                
+                jobs.push({
+                    id: jobId,
+                    title: jobTitle,
+                    workload: workload + "h/week",
+                    requirements: requirements,
+                    deadline: deadline,
+                    status: "Open"
+                });
+                
+                localStorage.setItem("jobs", JSON.stringify(jobs));
+                
+                Feedback.setButtonLoading(postBtn, false);
+                Feedback.showToast("Job posted successfully.", { variant: "success" });
+                
+                document.getElementById("jobTitle").value = "";
+                document.getElementById("workload").value = "";
+                document.getElementById("requirements").value = "";
+                document.getElementById("deadline").value = "";
+            }, 320);
         }
         
         // Load applicants
@@ -709,7 +712,7 @@
             // 重新加载申请人
             loadApplicants();
             
-            alert(`Application ${status.toLowerCase()} successfully!`);
+            Feedback.showToast(`Application ${status.toLowerCase()} successfully.`, { variant: "success" });
         }
         
         // View TA information
@@ -721,17 +724,17 @@
             let ta = users.find(user => user.studentId === taId);
             
             if (ta) {
-                let info = `TA Information:\n\n`;
-                info += `Student ID: ${ta.studentId}\n`;
-                info += `Full Name: ${ta.fullName}\n`;
-                info += `Email: ${ta.email}\n`;
-                info += `Major: ${profile.major || 'Not specified'}\n`;
-                info += `Skills: ${profile.skills ? profile.skills.join(', ') : 'Not specified'}\n`;
-                info += `Teaching Experience: ${profile.experience || 'Not specified'}\n`;
+                let info = "TA Information\n\n";
+                info += "Student ID: " + ta.studentId + "\n";
+                info += "Full Name: " + ta.fullName + "\n";
+                info += "Email: " + ta.email + "\n";
+                info += "Major: " + (profile.major || "Not specified") + "\n";
+                info += "Skills: " + (profile.skills ? profile.skills.join(", ") : "Not specified") + "\n";
+                info += "Teaching Experience: " + (profile.experience || "Not specified");
                 
-                alert(info);
+                Feedback.showBanner(info, { variant: "info", multiline: true, duration: 0 });
             } else {
-                alert("TA information not found.");
+                Feedback.showToast("TA information not found.", { variant: "error" });
             }
         }
 
@@ -772,7 +775,7 @@
             let applications = JSON.parse(localStorage.getItem("applications")) || [];
             let related = applications.filter(app => String(app.jobId) === String(jobId));
             if (related.length === 0) {
-                alert("No applicants for this job yet.");
+                Feedback.showToast("No applicants for this job yet.", { variant: "info" });
                 return;
             }
             let latest = related[related.length - 1];

@@ -188,7 +188,7 @@
         </div>
 
         <div class="button-row">
-            <button class="btn btn-primary" onclick="savePersonalCenter()">Save</button>
+            <button type="button" class="btn btn-primary" id="pcSaveBtn" onclick="savePersonalCenter()">Save</button>
             <button class="btn btn-secondary" onclick="viewResume()">View Resume</button>
             <button class="btn btn-secondary" onclick="window.location.href='job.html'">Back to Job List</button>
         </div>
@@ -198,6 +198,7 @@
         <p>© 2026 BUPT International School. All rights reserved.</p>
     </div>
 
+    <script src="feedback-ui.js"></script>
     <script>
         function checkSession() {
             const role = localStorage.getItem("role");
@@ -232,23 +233,28 @@
         }
 
         function savePersonalCenter() {
-            const data = JSON.parse(localStorage.getItem(personalKey())) || {};
-            data.name = document.getElementById("pcName").value.trim();
-            data.gender = document.getElementById("pcGender").value;
-            data.age = document.getElementById("pcAge").value.trim();
-            data.university = document.getElementById("pcUniversity").value.trim();
-            data.workExperience = document.getElementById("pcWork").value.trim();
-            data.projectExperience = document.getElementById("pcProject").value.trim();
-            data.honors = document.getElementById("pcHonor").value.trim();
-            localStorage.setItem(personalKey(), JSON.stringify(data));
-            alert("Personal center saved successfully.");
+            const saveBtn = document.getElementById("pcSaveBtn");
+            Feedback.setButtonLoading(saveBtn, true, { label: "Saving…" });
+            setTimeout(function () {
+                const data = JSON.parse(localStorage.getItem(personalKey())) || {};
+                data.name = document.getElementById("pcName").value.trim();
+                data.gender = document.getElementById("pcGender").value;
+                data.age = document.getElementById("pcAge").value.trim();
+                data.university = document.getElementById("pcUniversity").value.trim();
+                data.workExperience = document.getElementById("pcWork").value.trim();
+                data.projectExperience = document.getElementById("pcProject").value.trim();
+                data.honors = document.getElementById("pcHonor").value.trim();
+                localStorage.setItem(personalKey(), JSON.stringify(data));
+                Feedback.setButtonLoading(saveBtn, false);
+                Feedback.showToast("Personal center saved successfully.", { variant: "success" });
+            }, 280);
         }
 
         function viewResume() {
             const username = localStorage.getItem("username");
             const cvData = localStorage.getItem("cvData_" + username) || localStorage.getItem("cvData");
             if (!cvData) {
-                alert("No CV found. Please upload CV in profile page first.");
+                Feedback.showToast("No CV found. Please upload a CV on the profile page first.", { variant: "error" });
                 return;
             }
             window.open(cvData, "_blank");
@@ -259,7 +265,7 @@
                 const file = this.files[0];
                 if (!file) return;
                 if (!file.type.startsWith("image/")) {
-                    alert("Please choose an image file.");
+                    Feedback.showToast("Please choose an image file.", { variant: "error" });
                     return;
                 }
                 const reader = new FileReader();
