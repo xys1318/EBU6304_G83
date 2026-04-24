@@ -435,8 +435,8 @@
         
         <div class="navigation">
             <div class="button-group primary-actions">
-                <button class="btn-primary" onclick="saveProfile()">Save Profile</button>
-                <button class="btn-secondary" onclick="uploadCV()">Upload CV</button>
+                <button type="button" class="btn-primary" id="saveProfileBtn" onclick="saveProfile()">Save Profile</button>
+                <button type="button" class="btn-secondary" id="uploadCvBtn" onclick="uploadCV()">Upload CV</button>
             </div>
             <div class="button-group secondary-actions">
                 <button class="btn-secondary" onclick="window.location.href='job.html'">Browse Jobs</button>
@@ -450,6 +450,7 @@
         <p>© 2026 BUPT International School. All rights reserved.</p>
     </div>
 
+    <script src="feedback-ui.js"></script>
     <script>
         // Check session
         // 检查会话
@@ -518,21 +519,24 @@
             // Validate form data
             // 验证表单数据
             if (!major) {
-                alert("Major is required!");
+                Feedback.showToast("Major is required!", { variant: "error" });
                 return;
             }
             
-            // Save profile data to localStorage
-            // 保存档案数据到localStorage
-            let profile = {
-                major: major,
-                skills: skills,
-                experience: experience
-            };
-            localStorage.setItem("profile", JSON.stringify(profile));
-            
-            alert("Profile Saved Successfully! Redirecting to job list...");
-            window.location.href = "job.html";
+            let saveBtn = document.getElementById("saveProfileBtn");
+            Feedback.setButtonLoading(saveBtn, true, { label: "Saving…" });
+            setTimeout(function () {
+                let profile = {
+                    major: major,
+                    skills: skills,
+                    experience: experience
+                };
+                localStorage.setItem("profile", JSON.stringify(profile));
+                Feedback.showToast("Profile saved. Redirecting to job list…", { variant: "success", duration: 1400 });
+                setTimeout(function () {
+                    window.location.href = "job.html";
+                }, 650);
+            }, 280);
         }
         
         // Upload CV
@@ -542,7 +546,7 @@
             let file = fileInput.files[0];
             
             if (!file) {
-                alert("Please select a file to upload!");
+                Feedback.showToast("Please select a file to upload.", { variant: "error" });
                 return;
             }
             
@@ -550,16 +554,19 @@
             // 检查文件类型
             let allowedTypes = ["text/plain", "text/csv", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/pdf"];
             if (!allowedTypes.includes(file.type)) {
-                alert("Only TXT, CSV, Word, and PDF files are allowed!");
+                Feedback.showToast("Only TXT, CSV, Word, and PDF files are allowed.", { variant: "error" });
                 return;
             }
             
             // Check file size (≤5MB)
             // 检查文件大小（≤5MB）
             if (file.size > 5 * 1024 * 1024) {
-                alert("File size must be ≤5MB!");
+                Feedback.showToast("File size must be ≤5MB.", { variant: "error" });
                 return;
             }
+            
+            let uploadBtn = document.getElementById("uploadCvBtn");
+            Feedback.setButtonLoading(uploadBtn, true, { label: "Uploading…" });
             
             // Read file content as base64 for binary files
             // 以base64格式读取二进制文件内容
@@ -580,7 +587,12 @@
                 }
                 
                 document.getElementById("cvStatus").textContent = "CV uploaded successfully: " + file.name;
-                alert("CV Uploaded Successfully!");
+                Feedback.setButtonLoading(uploadBtn, false);
+                Feedback.showToast("CV uploaded successfully.", { variant: "success" });
+            };
+            reader.onerror = function () {
+                Feedback.setButtonLoading(uploadBtn, false);
+                Feedback.showToast("Could not read the file. Please try again.", { variant: "error" });
             };
             reader.readAsDataURL(file);
         }

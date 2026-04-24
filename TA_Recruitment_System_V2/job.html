@@ -367,6 +367,7 @@
         <p>© 2026 BUPT International School. All rights reserved.</p>
     </div>
 
+    <script src="feedback-ui.js"></script>
     <script>
         // Check session
         // 检查会话
@@ -423,7 +424,7 @@
             jobs.forEach((job, index) => {
                 let buttonClass = job.status === "Open" ? "btn-primary" : "btn-secondary";
                 let buttonText = job.status === "Open" ? "View Details & Apply" : "Position Closed";
-                let buttonAction = job.status === "Open" ? `onclick="viewJobDetail(${job.id})"` : `onclick="alert('This position is closed!')"`;
+                let buttonAction = job.status === "Open" ? `onclick="viewJobDetail(${job.id})"` : `onclick="showClosedJobNotice()"`;
                 
                 jobsHTML += `
                     <div class="job-card">
@@ -485,6 +486,10 @@
             loadJobs();
         }
         
+        function showClosedJobNotice() {
+            Feedback.showToast("This position is closed.", { variant: "info" });
+        }
+
         // View job detail
         // 查看职位详情
         function viewJobDetail(jobId) {

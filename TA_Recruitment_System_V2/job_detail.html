@@ -381,7 +381,7 @@
             <div class="card">
                 <h3 class="section-title">操作栏</h3>
                 <div class="action-bar">
-                    <button class="btn btn-primary" onclick="applyNow()">立即投递</button>
+                    <button type="button" class="btn btn-primary" id="applyNowBtn" onclick="applyNow()">立即投递</button>
                     <button class="btn btn-secondary" onclick="toggleFavorite()" id="favoriteBtn">收藏职位</button>
                 </div>
                 <div class="navigation">
@@ -411,6 +411,7 @@
         <p>© 2026 BUPT International School. All rights reserved.</p>
     </div>
 
+    <script src="feedback-ui.js"></script>
     <script>
         function checkSession() {
             if (!localStorage.getItem("username")) {
@@ -620,8 +621,9 @@
 
         function applyNow() {
             if (!currentJob) return;
+            let applyBtn = document.getElementById("applyNowBtn");
             if (currentJob.status !== "Open") {
-                alert("This position is currently closed.");
+                Feedback.showToast("This position is currently closed.", { variant: "info" });
                 return;
             }
 
@@ -629,19 +631,23 @@
             const username = localStorage.getItem("username");
             const duplicate = applications.some(app => app.jobId == currentJob.id && app.applicantName === username);
             if (duplicate) {
-                alert("You have already applied for this position.");
+                Feedback.showToast("You have already applied for this position.", { variant: "error" });
                 return;
             }
 
-            applications.push({
-                jobId: currentJob.id,
-                jobTitle: currentJob.title,
-                applicantName: username,
-                date: new Date().toISOString(),
-                status: "Pending"
-            });
-            localStorage.setItem("applications", JSON.stringify(applications));
-            alert("Application submitted successfully!");
+            Feedback.setButtonLoading(applyBtn, true, { label: "Submitting…" });
+            setTimeout(function () {
+                applications.push({
+                    jobId: currentJob.id,
+                    jobTitle: currentJob.title,
+                    applicantName: username,
+                    date: new Date().toISOString(),
+                    status: "Pending"
+                });
+                localStorage.setItem("applications", JSON.stringify(applications));
+                Feedback.setButtonLoading(applyBtn, false);
+                Feedback.showToast("Application submitted successfully.", { variant: "success" });
+            }, 380);
         }
 
         function getFavoritesKey() {
@@ -662,14 +668,14 @@
 
             if (index >= 0) {
                 favorites.splice(index, 1);
-                alert("Removed from favorites.");
+                Feedback.showToast("Removed from favorites.", { variant: "info" });
             } else {
                 favorites.push({
                     jobId: currentJob.id,
                     title: currentJob.title,
                     date: new Date().toISOString()
                 });
-                alert("Added to favorites.");
+                Feedback.showToast("Added to favorites.", { variant: "success" });
             }
 
             localStorage.setItem(getFavoritesKey(), JSON.stringify(favorites));
