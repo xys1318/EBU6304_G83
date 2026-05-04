@@ -1,0 +1,269 @@
+:root {
+    --font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.08);
+    --shadow-md: 0 10px 24px rgba(15, 23, 42, 0.12);
+    --surface-0: #f4f8ff;
+    --surface-1: #ffffff;
+    --surface-2: #f7f9fc;
+    --text-1: #1f2937;
+    --text-2: #4b5563;
+    --border: #dbe3f0;
+    --primary: #2458c6;
+    --primary-strong: #1d4aa6;
+    --primary-soft: #e8efff;
+    --success: #0f7b4f;
+    --error: #b42318;
+}
+
+html[data-theme="ta"] {
+    --surface-0: #eef5ff;
+    --surface-1: #ffffff;
+    --surface-2: #f5f9ff;
+    --primary: #2d6cdf;
+    --primary-strong: #2358b9;
+    --primary-soft: #e6f0ff;
+}
+
+html[data-theme="mo"] {
+    --surface-0: #eefbff;
+    --surface-1: #ffffff;
+    --surface-2: #f3fdff;
+    --primary: #1177a8;
+    --primary-strong: #0d628a;
+    --primary-soft: #dff6ff;
+}
+
+html[data-theme="admin"] {
+    --surface-0: #f3f5fa;
+    --surface-1: #ffffff;
+    --surface-2: #f8f9fc;
+    --primary: #374a7d;
+    --primary-strong: #2d3d66;
+    --primary-soft: #e8ecf7;
+}
+
+body {
+    font-family: var(--font-family) !important;
+    color: var(--text-1) !important;
+    background: linear-gradient(130deg, var(--surface-0), #ffffff 50%, var(--surface-2)) !important;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.header {
+    background: linear-gradient(90deg, var(--primary), var(--primary-strong)) !important;
+    box-shadow: var(--shadow-sm) !important;
+}
+
+.header h1,
+.header p {
+    color: #ffffff !important;
+}
+
+.container,
+.card,
+.job-card,
+.search-card,
+.similar-item,
+.record-card,
+.tab-content,
+.thread-item,
+.chat-panel,
+.chat-list,
+.result-item {
+    background-color: var(--surface-1) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: var(--shadow-sm) !important;
+}
+
+.container {
+    width: min(1100px, calc(100% - 32px)) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+h2,
+h3,
+h4,
+.section-title,
+.sidebar-title {
+    color: var(--primary-strong) !important;
+}
+
+input,
+select,
+textarea {
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-sm) !important;
+    background-color: #fff !important;
+    color: var(--text-1) !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14) !important;
+    outline: none !important;
+}
+
+button,
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-danger {
+    border-radius: var(--radius-sm) !important;
+}
+
+.btn-primary,
+button.btn-primary {
+    background-color: var(--primary) !important;
+    color: #fff !important;
+}
+
+.btn-primary:hover,
+button.btn-primary:hover {
+    background-color: var(--primary-strong) !important;
+}
+
+.btn-secondary,
+button.btn-secondary {
+    background-color: var(--primary-soft) !important;
+    color: var(--primary-strong) !important;
+    border: 1px solid var(--border) !important;
+}
+
+.btn-danger,
+button.btn-danger {
+    background-color: var(--error) !important;
+    color: #fff !important;
+}
+
+.personal-center-entry,
+.chat-entry {
+    border: 1px solid rgba(255, 255, 255, 0.38) !important;
+    background-color: rgba(255, 255, 255, 0.94) !important;
+    color: var(--primary-strong) !important;
+}
+
+.navigation,
+.button-row,
+.button-group {
+    gap: 12px !important;
+}
+
+.tag,
+.meta-pill,
+.status-badge,
+.chat-badge {
+    background-color: var(--primary-soft) !important;
+    color: var(--primary-strong) !important;
+}
+
+.footer {
+    background-color: var(--surface-1) !important;
+    border-top: 1px solid var(--border) !important;
+    color: var(--text-2) !important;
+}
+
+.tabs .tab.active,
+.tab.active {
+    background-color: var(--primary) !important;
+    color: #fff !important;
+}
+
+.tab {
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0 !important;
+}
+
+@media (max-width: 900px) {
+    .container {
+        width: calc(100% - 20px) !important;
+        padding: 16px !important;
+    }
+}
+
+html[data-theme="ta"] .job-card,
+html[data-theme="ta"] .similar-item,
+html[data-theme="ta"] .record-card {
+    border-left: 4px solid var(--primary) !important;
+}
+
+html[data-theme="ta"] .job-card:hover,
+html[data-theme="ta"] .similar-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md) !important;
+}
+
+html[data-theme="ta"] .avatar-preview,
+html[data-theme="ta"] .avatar,
+html[data-theme="ta"] .company-logo {
+    border-color: var(--primary) !important;
+}
+
+html[data-theme="ta"] .action-bar .btn-primary,
+html[data-theme="ta"] .navigation .btn-primary {
+    box-shadow: 0 6px 18px rgba(45, 108, 223, 0.22) !important;
+}
+
+html[data-theme="ta"] .search-card h3,
+html[data-theme="ta"] .section-title {
+    letter-spacing: 0.2px;
+}
+
+html[data-theme="mo"] .tabs,
+html[data-theme="admin"] .tabs {
+    border-bottom-color: var(--border) !important;
+    gap: 8px;
+}
+
+html[data-theme="mo"] .tab,
+html[data-theme="admin"] .tab {
+    background-color: var(--primary-soft) !important;
+    color: var(--primary-strong) !important;
+    border: 1px solid transparent !important;
+}
+
+html[data-theme="mo"] .tab.active,
+html[data-theme="admin"] .tab.active {
+    border-color: var(--primary) !important;
+}
+
+html[data-theme="mo"] .stats-grid .stat-card,
+html[data-theme="admin"] .stats-grid .stat-card,
+html[data-theme="mo"] .summary-card,
+html[data-theme="admin"] .summary-card {
+    background: linear-gradient(180deg, #ffffff, var(--surface-2)) !important;
+}
+
+html[data-theme="admin"] .container {
+    border-top: 4px solid var(--primary) !important;
+}
+
+html[data-theme="mo"] .container {
+    border-top: 4px solid var(--primary) !important;
+}
+
+html[data-theme="ta"] .thread-item.active,
+html[data-theme="mo"] .thread-item.active,
+html[data-theme="admin"] .thread-item.active {
+    background-color: var(--primary-soft) !important;
+    border-left: 4px solid var(--primary) !important;
+}
+
+html[data-theme="ta"] #chatMeta,
+html[data-theme="mo"] #chatMeta,
+html[data-theme="admin"] #chatMeta {
+    color: var(--primary-strong) !important;
+}
+
+html[data-theme="mo"] .name,
+html[data-theme="admin"] .name {
+    color: var(--primary) !important;
+}
