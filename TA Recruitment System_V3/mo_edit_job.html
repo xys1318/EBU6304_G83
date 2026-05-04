@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Job - MO</title>
+    <style>
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background: linear-gradient(-45deg, #e6f2ff, #ffffff, #e6f2ff, #ffffff);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            margin: 0;
+            color: #333;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .header {
+            background-color: #003366;
+            color: #fff;
+            padding: 18px 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header h1 { margin: 0; font-size: 26px; }
+        .header p { margin: 6px 0 0 0; opacity: 0.9; }
+
+        .container {
+            width: 760px;
+            margin: 28px auto 90px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 24px;
+            box-sizing: border-box;
+        }
+
+        .title {
+            margin: 0 0 18px 0;
+            color: #003366;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px 12px;
+            font-size: 14px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #003366;
+            box-shadow: 0 0 0 2px rgba(0,51,102,0.1);
+        }
+
+        .hint {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .actions {
+            margin-top: 18px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        button {
+            border: none;
+            border-radius: 4px;
+            padding: 10px 18px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-primary { background: #003366; color: #fff; }
+        .btn-secondary { background: #f0f0f0; color: #333; }
+
+        .footer {
+            text-align: center;
+            padding: 18px 0;
+            background-color: #f0f0f0;
+            font-size: 12px;
+            color: #666;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>TA Recruitment System</h1>
+        <p>MO Job Editing</p>
+    </div>
+
+    <div class="container">
+        <h2 class="title">Edit Job</h2>
+        <div class="grid">
+            <div class="form-group full">
+                <label for="jobTitle">Job Title</label>
+                <input id="jobTitle" type="text" placeholder="Enter job title">
+            </div>
+            <div class="form-group">
+                <label for="workload">Workload</label>
+                <input id="workload" type="text" placeholder="e.g. 5h/week">
+            </div>
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select id="status">
+                    <option value="Open">Open</option>
+                    <option value="Waitlist Only">Waitlist Only</option>
+                    <option value="Closed">Closed</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input id="location" type="text" placeholder="e.g. BUPT Campus">
+            </div>
+            <div class="form-group">
+                <label for="deadline">Deadline</label>
+                <input id="deadline" type="text" placeholder="e.g. May 31, 2026">
+            </div>
+            <div class="form-group full">
+                <label for="requirements">Requirements</label>
+                <textarea id="requirements" placeholder="Enter job requirements"></textarea>
+            </div>
+            <div class="form-group full">
+                <div class="hint">If this job comes from recruitment batch data, saving will sync both `jobs` cache and `recruitmentBatches`, so TA side can see updates immediately.</div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="btn-primary" id="saveBtn" onclick="saveJob()">Save Changes</button>
+            <button class="btn-secondary" onclick="goBack()">Back</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2026 BUPT International School. All rights reserved.</p>
+    </div>
+
+    <link rel="stylesheet" href="theme.css">
+    <script src="theme.js"></script>
+    <script src="storage_service.js"></script>
+    <script src="feedback-ui.js"></script>
+    <script src="role_access.js"></script>
+    <script src="recruitment_data.js"></script>
+    <script>
+        let currentJobId = "";
+        let currentJob = null;
+
+        function checkSession() {
+            return RoleAccess.guardPage({ roles: ["mo"], redirectUrl: "login.html" });
+        }
+
+        function getJobIdFromQuery() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get("id") || "";
+        }
+
+        function getJobs() {
+            return JSON.parse(localStorage.getItem("jobs")) || [];
+        }
+
+        function saveJobs(jobs) {
+            localStorage.setItem("jobs", JSON.stringify(jobs));
+        }
+
+        function loadJob() {
+            const jobs = getJobs();
+            currentJob = jobs.find((job) => String(job.id) === String(currentJobId)) || null;
+            if (!currentJob) {
+                Feedback.showToast("Job not found.", { variant: "error" });
+                setTimeout(goBack, 600);
+                return;
+            }
+
+            document.getElementById("jobTitle").value = currentJob.title || "";
+            document.getElementById("workload").value = currentJob.workload || "";
+            document.getElementById("requirements").value = currentJob.requirements || "";
+            document.getElementById("deadline").value = currentJob.deadline || "";
+            document.getElementById("status").value = currentJob.status || "Open";
+            document.getElementById("location").value = currentJob.location || "";
+        }
+
+        function normalizeWorkload(value) {
+            const trimmed = String(value || "").trim();
+            if (!trimmed) return "";
+            if (/h\/week$/i.test(trimmed)) return trimmed;
+            return trimmed + "h/week";
+        }
+
+        function tryParseDateToISO(value) {
+            const ts = new Date(value).getTime();
+            if (Number.isNaN(ts)) return null;
+            return new Date(ts).toISOString();
+        }
+
+        function syncBatchSource(editedJob) {
+            const batches = JSON.parse(localStorage.getItem("recruitmentBatches")) || [];
+            if (!Array.isArray(batches) || batches.length === 0) return;
+
+            let matched = false;
+            batches.forEach((batch) => {
+                const positions = Array.isArray(batch.positions) ? batch.positions : [];
+                positions.forEach((position) => {
+                    if (String(position.id) === String(editedJob.id)) {
+                        position.title = editedJob.title;
+                        position.workload = editedJob.workload;
+                        position.requiredConditions = editedJob.requirements;
+                        position.location = editedJob.location || position.location || "BUPT Campus";
+                        matched = true;
+                    }
+                });
+
+                if (matched && String(batch.id) === String(editedJob.batchId)) {
+                    const nextEnd = tryParseDateToISO(editedJob.deadline);
+                    if (nextEnd) {
+                        batch.endTime = nextEnd;
+                    }
+                }
+            });
+
+            if (matched) {
+                localStorage.setItem("recruitmentBatches", JSON.stringify(batches));
+            }
+        }
+
+        function saveJob() {
+            const title = document.getElementById("jobTitle").value.trim();
+            const workload = normalizeWorkload(document.getElementById("workload").value);
+            const requirements = document.getElementById("requirements").value.trim();
+            const deadline = document.getElementById("deadline").value.trim();
+            const status = document.getElementById("status").value;
+            const location = document.getElementById("location").value.trim();
+
+            if (!title || !workload || !requirements || !deadline) {
+                Feedback.showToast("Please complete all required fields.", { variant: "error" });
+                return;
+            }
+
+            const jobs = getJobs();
+            const index = jobs.findIndex((job) => String(job.id) === String(currentJobId));
+            if (index < 0) {
+                Feedback.showToast("Job no longer exists.", { variant: "error" });
+                return;
+            }
+
+            const editedJob = {
+                ...jobs[index],
+                title: title,
+                workload: workload,
+                requirements: requirements,
+                requirementsDetail: requirements,
+                deadline: deadline,
+                status: status,
+                location: location || (jobs[index].location || "BUPT Campus")
+            };
+
+            jobs[index] = editedJob;
+            saveJobs(jobs);
+            syncBatchSource(editedJob);
+
+            if (window.RecruitmentData && typeof RecruitmentData.refreshJobsCache === "function") {
+                try {
+                    RecruitmentData.refreshJobsCache();
+                } catch (error) {
+                    // Keep UI flow smooth even if cache refresh fails.
+                }
+            }
+
+            Feedback.showToast("Job updated successfully.", { variant: "success" });
+            setTimeout(goBack, 450);
+        }
+
+        function goBack() {
+            window.location.href = "mo_dashboard.html";
+        }
+
+        window.onload = function () {
+            checkSession();
+            currentJobId = getJobIdFromQuery();
+            if (!currentJobId) {
+                Feedback.showToast("Missing job id.", { variant: "error" });
+                setTimeout(goBack, 600);
+                return;
+            }
+            loadJob();
+        };
+    </script>
+</body>
+</html>
