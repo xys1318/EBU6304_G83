@@ -1,0 +1,9 @@
+{
+  "users": [
+    {"id": "1", "username": "testuser", "role": "applicant"}
+  ],
+  "jobs": [
+    {"id": "job001", "title": "TA for CS101", "status": "open"}
+  ],
+  "chatMessages": []
+}
