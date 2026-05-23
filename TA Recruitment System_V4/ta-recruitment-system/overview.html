@@ -1,0 +1,190 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>TA Recruitment System - Overview</title>
+</head>
+<body>
+<h1>TA Recruitment System</h1>
+
+<p><em>Version 4.0.4 | Group ID: G83</em></p>
+
+<h2>System Architecture</h2>
+<p>The TA Recruitment System is a lightweight web application built using Java Servlet 4.0 and JSP technology. It follows a simple three-tier architecture:</p>
+<ul>
+    <li><strong>Presentation Layer:</strong> HTML5, JavaScript, and CSS3 for the user interface</li>
+    <li><strong>Business Logic Layer:</strong> Java Servlets handling HTTP requests and responses</li>
+    <li><strong>Data Storage Layer:</strong> JSON file-based storage (<code>WEB-INF/data/storage.json</code>)</li>
+</ul>
+
+<h2>Required Environment</h2>
+<ul>
+    <li>Java Development Kit (JDK) 11 or higher</li>
+    <li>Apache Maven 3.6 or higher</li>
+    <li>Application Server: Jetty (embedded) or Apache Tomcat 9+</li>
+</ul>
+
+<h2>Main Functional Modules</h2>
+<dl>
+    <dt><strong>Authentication Module</strong></dt>
+    <dd>User login, registration, and role-based access control. Supports three roles: TA, MO, and Admin.</dd>
+    
+    <dt><strong>Job Management Module</strong></dt>
+    <dd>Create, edit, delete, and view job listings. Managers can post new job opportunities.</dd>
+    
+    <dt><strong>Application Tracking Module</strong></dt>
+    <dd>Submit applications, track application status, and manage the recruitment workflow.</dd>
+    
+    <dt><strong>Chat System Module</strong></dt>
+    <dd>Communication between applicants and recruiters/managers.</dd>
+    
+    <dt><strong>Profile Management Module</strong></dt>
+    <dd>Update personal information, resume management, and theme customization.</dd>
+    
+    <dt><strong>Admin Dashboard Module</strong></dt>
+    <dd>Comprehensive admin features including TA workload overview, operation timeline, data export, and user management.</dd>
+</dl>
+
+<h2>Role-Based Access Control</h2>
+<p>The system supports three distinct user roles:</p>
+
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Role</th>
+            <th>Description</th>
+            <th>Key Features</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>TA</strong><br>(Teaching Assistant)</td>
+            <td>Job applicants seeking TA positions</td>
+            <td>Browse jobs, apply for positions, manage resume, view application status, chat with MO</td>
+        </tr>
+        <tr>
+            <td><strong>MO</strong><br>(Management Officer)</td>
+            <td>Recruitment managers handling TA hiring</td>
+            <td>Post jobs, review applications, approve/reject candidates, chat with TAs</td>
+        </tr>
+        <tr>
+            <td><strong>Admin</strong><br>(System Administrator)</td>
+            <td>System administrators overseeing operations</td>
+            <td>Manage users, export data, view TA workload overview, operation timeline</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>AI Features</h2>
+<p><strong>Note:</strong> This system does NOT include any AI features. All processes (application, review, decision) require human operation.</p>
+<ul>
+    <li>No AI image generation (uses local assets instead)</li>
+    <li>No LLM/ChatGPT integration</li>
+    <li>No machine learning or NLP features</li>
+</ul>
+
+<h2>Data Storage</h2>
+<p>All application data is stored in a JSON file located at:</p>
+<pre>WEB-INF/data/storage.json</pre>
+
+<p><strong>JSON Structure:</strong>
+The storage file contains a single JSON object with the following main keys:
+<ul>
+    <li><code>users</code> - Array of user profiles with authentication credentials</li>
+    <li><code>jobs</code> - Array of job postings</li>
+    <li><code>applications</code> - Array of job applications</li>
+    <li><code>messages</code> - Array of chat messages</li>
+</ul>
+
+<p><strong>Backup Instructions:</strong>
+To backup the data, simply copy the <code>storage.json</code> file to a safe location.
+For automated backups, consider implementing a scheduled task to copy this file periodically.</p>
+
+<h2>API Endpoints</h2>
+<p>The system provides REST-like API endpoints via servlets:</p>
+<dl>
+    <dt><code>GET /api/storage</code></dt>
+    <dd>Retrieves all stored data as JSON</dd>
+    
+    <dt><code>POST /api/storage</code></dt>
+    <dd>Writes JSON data to storage file</dd>
+    
+    <dt><code>OPTIONS /api/storage</code></dt>
+    <dd>Handles CORS preflight requests</dd>
+</dl>
+
+<h2>Testing Framework</h2>
+<p>The system includes comprehensive unit and integration tests using:</p>
+<ul>
+    <li><strong>JUnit 5</strong> - Testing framework for unit and integration tests</li>
+    <li><strong>Mockito</strong> - Mocking framework for HTTP requests/responses</li>
+    <li><strong>Gson</strong> - JSON parsing for test data manipulation</li>
+</ul>
+
+<p><strong>Test Coverage:</strong></p>
+<dl>
+    <dt><strong>Servlet Layer Tests</strong></dt>
+    <dd>Tests for <code>StorageSyncServlet</code> using Mockito to mock HttpServletRequest and HttpServletResponse</dd>
+    
+    <dt><strong>Service Layer Tests</strong></dt>
+    <dd>Tests for JSON file I/O operations using JUnit 5 <code>@TempDir</code> for temporary directories</dd>
+    
+    <dt><strong>Integration Tests</strong></dt>
+    <dd>End-to-end workflow tests covering user registration, job posting, application submission, and chat system</dd>
+</dl>
+
+<p><strong>Test Execution:</strong></p>
+<pre>mvn test                           # Run all tests
+mvn test -Dtest=StorageSyncServletTest   # Run specific test class
+mvn test -Dtest="com.ta.recruitment.servlet.*"  # Run tests by package</pre>
+
+<h2>Project Structure</h2>
+<pre>TA Recruitment System_V4/
+├── src/main/java/com/ta/recruitment/servlet/
+│   ├── StorageSyncServlet.java    # Main storage API servlet
+│   └── package-info.java          # Package documentation
+├── test/java/com/ta/recruitment/
+│   ├── servlet/                   # Servlet unit tests
+│   ├── service/                   # File I/O tests
+│   └── integration/               # Integration tests
+├── src/main/webapp/               # Frontend resources
+├── pom.xml                        # Maven configuration
+├── README.md                      # Project documentation
+├── TESTING.md                     # Test documentation
+├── BACKEND_SETUP.md               # Backend setup guide
+└── overview.html                  # Javadoc overview</pre>
+
+<h2>Building and Running</h2>
+<p><strong>Build with Maven:</strong></p>
+<pre>mvn clean install -DskipTests</pre>
+
+<p><strong>Run with Jetty:</strong></p>
+<pre>mvn jetty:run</pre>
+
+<p><strong>Deploy to Tomcat:</strong></p>
+<pre>mvn clean package
+copy target/ta-recruitment-system.war TOMCAT_HOME/webapps/</pre>
+
+<p><strong>Generate Javadoc:</strong></p>
+<pre>mvn javadoc:javadoc</pre>
+
+<h2>Access URLs</h2>
+<ul>
+    <li>Login: <code>http://localhost:8082/ta/login.html</code></li>
+    <li>Home: <code>http://localhost:8082/ta/</code></li>
+    <li>Admin Dashboard: <code>http://localhost:8082/ta/admin_dashboard.html</code></li>
+    <li>Javadoc: <code>target/site/apidocs/index.html</code></li>
+</ul>
+
+<h2>Documentation</h2>
+<p>For more detailed information, refer to the following documentation files:</p>
+<ul>
+    <li><strong>README.md</strong>: Project overview, setup, and usage instructions</li>
+    <li><strong>TESTING.md</strong>: Test documentation with test coverage and running instructions</li>
+    <li><strong>BACKEND_SETUP.md</strong>: Backend development setup guide</li>
+    <li><strong>FAQ Section in README.md</strong>: Frequently asked questions and troubleshooting</li>
+</ul>
+
+<hr>
+<p><em>Built with Java Servlet and Jetty | Maintained by Group G83</em></p>
+</body>
+</html>

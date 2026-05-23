@@ -1,0 +1,28 @@
+-classpath
+'C:/Users/lenovo/.m2/repository/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar'
+-encoding
+'UTF-8'
+-overview
+'C:/Users/lenovo/Desktop/Software_group83/TA Recruitment System_V4/overview.html'
+-protected
+-source
+'11'
+-sourcepath
+'C:/Users/lenovo/Desktop/Software_group83/TA Recruitment System_V4/src/main/java;C:/Users/lenovo/Desktop/Software_group83/TA Recruitment System_V4/target/generated-sources/annotations'
+-author
+-bottom
+'Copyright &#169; 2026. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'C:/Users/lenovo/Desktop/Software_group83/TA Recruitment System_V4/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'TA Recruitment System 1.0.0 API'
+-linkoffline
+'https://docs.oracle.com/en/java/javase/11/docs/api' 'C:/Users/lenovo/Desktop/Software_group83/TA Recruitment System_V4/target/javadoc-bundle-options'
+-use
+-version
+-windowtitle
+'TA Recruitment System 1.0.0 API'
