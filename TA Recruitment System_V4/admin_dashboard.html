@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin · TA Recruitment</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            color: #333;
+            background: linear-gradient(-45deg, #e6f2ff, #fff, #e6f2ff, #fff);
+            background-size: 400% 400%;
+            animation: bg 18s ease infinite;
+        }
+        @keyframes bg {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        .header {
+            background: #003366;
+            color: #fff;
+            text-align: center;
+            padding: 18px 16px;
+            box-shadow: 0 2px 6px rgba(0,0,0,.12);
+        }
+        .header h1 { margin: 0; font-size: 22px; }
+        .header p { margin: 6px 0 0; font-size: 14px; opacity: .92; }
+        .wrap {
+            max-width: 920px;
+            margin: 28px auto 100px;
+            padding: 0 16px;
+        }
+        .title-row {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .title-row h2 { margin: 0; color: #003366; font-size: 22px; }
+        .title-row .meta { color: #555; font-size: 14px; margin-top: 6px; }
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 22px;
+        }
+        .card {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 18px 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,.08);
+        }
+        .card h3 {
+            margin: 0 0 14px;
+            color: #003366;
+            font-size: 17px;
+            border-bottom: 1px solid #dde5ef;
+            padding-bottom: 8px;
+        }
+        .hint { font-size: 13px; color: #666; margin: 0 0 12px; line-height: 1.5; }
+        .form2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 14px;
+        }
+        @media (max-width: 640px) { .form2 { grid-template-columns: 1fr; } }
+        .form2 .full { grid-column: 1 / -1; }
+        label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; color: #444; }
+        input, textarea, select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 9px 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        textarea { min-height: 64px; resize: vertical; }
+        button {
+            padding: 9px 16px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-primary { background: #003366; color: #fff; }
+        .btn-primary:hover { background: #002244; }
+        .btn-secondary { background: #e8e8e8; color: #333; }
+        .btn-secondary:hover { background: #ddd; }
+        .btn-danger { background: #c82333; color: #fff; }
+        .btn-danger:hover { background: #a71d2a; }
+        .btn-sm { padding: 5px 10px; font-size: 12px; margin: 2px; }
+        .btn-ok { background: #218838; color: #fff; }
+        table.admin-t {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .admin-t th, .admin-t td { border: 1px solid #e5e5e5; padding: 8px; text-align: left; vertical-align: top; }
+        .admin-t th { background: #e6f2ff; color: #003366; }
+        .tag { display: inline-block; background: #e6f2ff; color: #003366; border-radius: 999px; padding: 2px 8px; font-size: 11px; margin-right: 4px; }
+        .account-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            background: #fff;
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .account-row .acts { display: flex; flex-wrap: wrap; gap: 6px; }
+        .accounts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        .account-panel {
+            background: #fff;
+            border: 1px solid #e5edf7;
+            border-radius: 10px;
+            padding: 12px;
+        }
+        .account-panel h4 {
+            margin: 0 0 10px;
+            color: #003366;
+            font-size: 15px;
+        }
+        .overview-row {
+            background: #fff;
+            border: 1px solid #e5edf7;
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+        }
+        .overview-row h4 {
+            margin: 0 0 8px;
+            color: #003366;
+            font-size: 15px;
+        }
+        .overview-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 13px;
+            color: #4b5563;
+        }
+        .notice-console {
+            background: linear-gradient(160deg, #1f2a44, #223b68);
+            border-radius: 14px;
+            padding: 16px;
+            color: #eef4ff;
+            border: 1px solid #2f4d81;
+            box-shadow: 0 10px 22px rgba(22, 40, 72, 0.28);
+        }
+        .notice-console label {
+            color: #d9e6ff;
+            margin-top: 6px;
+        }
+        .notice-console select,
+        .notice-console textarea {
+            border: 1px solid #4a6ba5;
+            background: rgba(255, 255, 255, 0.08);
+            color: #f3f8ff;
+        }
+        .notice-console textarea::placeholder {
+            color: #cad8f5;
+        }
+        .notice-console .btn-primary {
+            background: #57b1ff;
+            color: #06213f;
+            font-weight: 700;
+        }
+        .notice-list {
+            margin-top: 14px;
+            display: grid;
+            gap: 10px;
+        }
+        .notice-item {
+            background: #fff;
+            border: 1px solid #d9e4f2;
+            border-radius: 10px;
+            padding: 10px 12px;
+        }
+        .notice-item .meta {
+            color: #5f6f86;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+        .footer {
+            text-align: center;
+            padding: 14px;
+            font-size: 12px;
+            color: #666;
+            background: #f0f0f0;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+        .empty { color: #888; font-style: italic; padding: 16px; text-align: center; background: #fff; border-radius: 8px; }
+        @media (max-width: 800px) {
+            .accounts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>TA Recruitment System</h1>
+        <p>Admin · Shared local data with TA and MO (jobs / applications / recruitmentBatches)</p>
+    </div>
+
+    <div class="wrap">
+        <div class="title-row">
+            <h2>Admin Console</h2>
+            <p class="meta">Current user: <strong id="adminUserLabel">-</strong></p>
+        </div>
+
+        <div class="toolbar">
+            <button type="button" class="btn-danger" onclick="logout()">Log out</button>
+        </div>
+
+        <div class="card">
+            <h3>Application Records</h3>
+            <p class="hint">Uses the same <code>applications</code> data as the MO approval console. Updating status here triggers <code>refreshJobsCache</code> to sync TA-side slots.</p>
+            <p style="margin-bottom:10px;">
+                <label style="display:inline;margin-right:8px;">Status filter</label>
+                <select id="appStatusFilter" onchange="renderApplications()">
+                    <option value="">All</option>
+                    <option>Pending</option>
+                    <option>Approved</option>
+                    <option>Rejected</option>
+                    <option>Waitlisted</option>
+                </select>
+            </p>
+            <div id="applicationsWrap"></div>
+        </div>
+
+        <div class="card">
+            <h3>Account Management</h3>
+            <p class="hint">Manage TA and MO accounts, including email updates, role changes, and account deletion.</p>
+            <div class="accounts-grid">
+                <div class="account-panel">
+                    <h4>TA Accounts</h4>
+                    <div id="taAccountsContainer"></div>
+                </div>
+                <div class="account-panel">
+                    <h4>MO Accounts</h4>
+                    <div id="moAccountsContainer"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Job & Application Overview</h3>
+            <p class="hint">View all jobs (including MO-posted jobs) and TA submissions with shared real-time local data across TA/MO pages.</p>
+            <div id="jobOverviewWrap"></div>
+        </div>
+
+        <div class="card">
+            <h3>System Notice Center (Admin Chat)</h3>
+            <p class="hint">Broadcast notices to all TAs or all MOs. Messages appear in chat as system threads.</p>
+            <div class="notice-console">
+                <div class="form2">
+                    <div>
+                        <label>Audience</label>
+                        <select id="noticeAudience">
+                            <option value="ta">All TAs</option>
+                            <option value="mo">All MOs</option>
+                        </select>
+                    </div>
+                    <div class="full">
+                        <label>Notice content</label>
+                        <textarea id="noticeText" placeholder="Enter the system notice (e.g. complete job approvals before 18:00 on Friday)"></textarea>
+                    </div>
+                </div>
+                <p style="margin:10px 0 0">
+                    <button type="button" class="btn-primary" onclick="sendSystemNotice()">Publish Notice</button>
+                </p>
+            </div>
+            <div id="noticeHistory" class="notice-list"></div>
+        </div>
+
+    </div>
+
+    <div class="footer">© 2026 BUPT International School</div>
+
+    <link rel="stylesheet" href="theme.css">
+    <script src="theme.js"></script>
+    <script src="storage_service.js"></script>
+    <script src="recruitment_data.js"></script>
+    <script src="chat_service.js"></script>
+    <script src="feedback-ui.js"></script>
+    <script src="role_access.js"></script>
+    <script>
+        function checkSession() {
+            return RoleAccess.guardPage({ roles: ["admin"], redirectUrl: "login.html" });
+        }
+
+        function actorMeta() {
+            return { actorRole: "admin", actorUser: localStorage.getItem("username") || "" };
+        }
+
+        function escapeHtml(s) {
+            return String(s == null ? "" : s)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        function renderApplications() {
+            const wrap = document.getElementById("applicationsWrap");
+            const filter = (document.getElementById("appStatusFilter") && document.getElementById("appStatusFilter").value) || "";
+            const apps = RecruitmentData ? RecruitmentData.getApplications() : JSON.parse(localStorage.getItem("applications") || "[]");
+            let rows = apps.slice().sort(function (a, b) { return new Date(b.date) - new Date(a.date); });
+            if (filter) rows = rows.filter(function (a) { return a.status === filter; });
+            if (!rows.length) {
+                wrap.innerHTML = "<div class='empty'>No data</div>";
+                return;
+            }
+            let html = "<table class='admin-t'><thead><tr><th>Applicant</th><th>Job</th><th>Course/Batch</th><th>Time</th><th>Status</th><th>Actions</th></tr></thead><tbody>";
+            rows.forEach(function (app) {
+                const jid = String(app.jobId);
+                const an = String(app.applicantName);
+                html += "<tr><td>" + escapeHtml(an) + "</td><td>" + escapeHtml(app.jobTitle || "-") + "</td><td>" +
+                    "<span class='tag'>" + escapeHtml(app.course || "-") + "</span>" +
+                    "<span class='tag'>" + escapeHtml(app.batchName || "-") + "</span></td><td>" +
+                    escapeHtml(app.date ? new Date(app.date).toLocaleString() : "-") + "</td><td>" +
+                    escapeHtml(app.status || "-") + "</td><td>" +
+                    "<button type='button' class='btn-sm btn-ok' onclick='setApp(" + JSON.stringify(jid) + "," + JSON.stringify(an) + ",\"Approved\")'>Approve</button> " +
+                    "<button type='button' class='btn-sm btn-danger' onclick='setApp(" + JSON.stringify(jid) + "," + JSON.stringify(an) + ",\"Rejected\")'>Reject</button>" +
+                    "</td></tr>";
+            });
+            html += "</tbody></table>";
+            wrap.innerHTML = html;
+        }
+
+        function setApp(jobId, applicantName, status) {
+            const res = RecruitmentData.updateApplicationStatus(jobId, applicantName, status, actorMeta());
+            if (!res.ok) {
+                Feedback.showToast(res.reason || "Failed.", { variant: "error" });
+                return;
+            }
+            Feedback.showToast("Updated.", { variant: "success" });
+            refreshAll();
+        }
+
+        function getUsers() {
+            return JSON.parse(localStorage.getItem("users") || "[]");
+        }
+
+        function saveUsers(users) {
+            localStorage.setItem("users", JSON.stringify(users || []));
+        }
+
+        function getUserKey(user) {
+            return String(user && (user.studentId || user.email || user.fullName) || "");
+        }
+
+        function getUserIndexByKey(key) {
+            const users = getUsers();
+            for (let i = 0; i < users.length; i++) {
+                if (getUserKey(users[i]) === String(key)) return i;
+            }
+            return -1;
+        }
+
+        function renderAccountList(role, containerId) {
+            const box = document.getElementById(containerId);
+            const users = JSON.parse(localStorage.getItem("users") || "[]");
+            const rows = users.filter(function (u) { return String(u.role || "").toLowerCase() === role; });
+            if (!rows.length) {
+                box.innerHTML = "<div class='empty'>No registered users.</div>";
+                return;
+            }
+            box.innerHTML = rows.map(function (u) {
+                const key = getUserKey(u);
+                return "<div class='account-row'><div><strong>" + escapeHtml(u.fullName) + "</strong> " +
+                    escapeHtml(u.studentId) + "<br><span style='color:#666;font-size:13px;'>" +
+                    escapeHtml(u.email) + " · " + escapeHtml(String(u.role || "").toUpperCase()) + "</span></div>" +
+                    "<div class='acts'>" +
+                    "<button type='button' class='btn-sm btn-secondary' onclick='editMailByKey(" + JSON.stringify(key) + ")'>Edit Email</button>" +
+                    "<button type='button' class='btn-sm btn-secondary' onclick='editRoleByKey(" + JSON.stringify(key) + ")'>Edit Role</button>" +
+                    "<button type='button' class='btn-sm btn-danger' onclick='delUserByKey(" + JSON.stringify(key) + ")'>Delete</button></div></div>";
+            }).join("");
+        }
+
+        function renderAccounts() {
+            renderAccountList("ta", "taAccountsContainer");
+            renderAccountList("mo", "moAccountsContainer");
+        }
+
+        function editMailByKey(key) {
+            const users = getUsers();
+            const i = getUserIndexByKey(key);
+            if (i < 0) return;
+            const u = users[i];
+            const v = prompt("New email", u.email);
+            if (v) {
+                u.email = v;
+                saveUsers(users);
+                Feedback.showToast("Saved.", { variant: "success" });
+                renderAccounts();
+            }
+        }
+
+        function editRoleByKey(key) {
+            const users = getUsers();
+            const i = getUserIndexByKey(key);
+            if (i < 0) return;
+            const u = users[i];
+            const v = prompt("Role: ta / mo / admin", u.role);
+            if (!v) return;
+            const r = v.trim().toLowerCase();
+            if (["ta", "mo", "admin"].indexOf(r) < 0) { Feedback.showToast("Invalid role.", { variant: "error" }); return; }
+            u.role = r;
+            saveUsers(users);
+            Feedback.showToast("Saved.", { variant: "success" });
+            renderAccounts();
+        }
+
+        function delUserByKey(key) {
+            if (!confirm("Delete this user?")) return;
+            const users = getUsers();
+            const i = getUserIndexByKey(key);
+            if (i < 0) return;
+            users.splice(i, 1);
+            saveUsers(users);
+            Feedback.showToast("Deleted.", { variant: "success" });
+            renderAccounts();
+        }
+
+        function renderJobOverview() {
+            const wrap = document.getElementById("jobOverviewWrap");
+            const jobs = RecruitmentData && typeof RecruitmentData.refreshJobsCache === "function"
+                ? RecruitmentData.refreshJobsCache()
+                : JSON.parse(localStorage.getItem("jobs") || "[]");
+            const apps = RecruitmentData ? RecruitmentData.getApplications() : JSON.parse(localStorage.getItem("applications") || "[]");
+            if (!jobs.length) {
+                wrap.innerHTML = "<div class='empty'>No job data yet.</div>";
+                return;
+            }
+            const html = jobs.slice().sort(function (a, b) {
+                return (new Date(b.deadlineRaw || b.deadline || 0).getTime() || 0) - (new Date(a.deadlineRaw || a.deadline || 0).getTime() || 0);
+            }).map(function (job) {
+                const related = apps.filter(function (app) { return String(app.jobId) === String(job.id); });
+                const pending = related.filter(function (app) { return app.status === "Pending"; }).length;
+                const approved = related.filter(function (app) { return app.status === "Approved"; }).length;
+                const rejected = related.filter(function (app) { return app.status === "Rejected"; }).length;
+                const waitlisted = related.filter(function (app) { return app.status === "Waitlisted"; }).length;
+                const taList = related.length ? related.map(function (app) {
+                    return escapeHtml(app.applicantName || "-") + "（" + escapeHtml(app.status || "-") + "）";
+                }).join(", ") : "No submissions yet.";
+                return (
+                    "<div class='overview-row'>" +
+                    "<h4>" + escapeHtml(job.title || "-") + "</h4>" +
+                    "<div class='overview-meta'>" +
+                    "<span class='tag'>Course " + escapeHtml(job.course || "-") + "</span>" +
+                    "<span class='tag'>Batch " + escapeHtml(job.batchName || "-") + "</span>" +
+                    "<span class='tag'>Status " + escapeHtml(job.status || "-") + "</span>" +
+                    "<span>Slots " + escapeHtml(String(job.slotsTotal || 1)) + "</span>" +
+                    "<span>Submissions " + related.length + "</span>" +
+                    "<span>Pending " + pending + "</span>" +
+                    "<span>Approved " + approved + "</span>" +
+                    "<span>Rejected " + rejected + "</span>" +
+                    "<span>Waitlisted " + waitlisted + "</span>" +
+                    "</div>" +
+                    "<p style='margin:8px 0 0;font-size:13px;color:#4b5563;line-height:1.5;'><strong>TA submissions:</strong> " + taList + "</p>" +
+                    "</div>"
+                );
+            }).join("");
+            wrap.innerHTML = html;
+        }
+
+        function sendSystemNotice() {
+            const audience = document.getElementById("noticeAudience").value;
+            const text = document.getElementById("noticeText").value.trim();
+            if (!text) {
+                Feedback.showToast("Please enter notice content.", { variant: "error" });
+                return;
+            }
+            const messages = ChatService.getMessages();
+            const actor = localStorage.getItem("username") || "admin";
+            messages.push({
+                jobId: "system_notice_" + audience,
+                jobTitle: audience === "ta" ? "System Notice · TA" : "System Notice · MO",
+                taUser: "system_audience_" + audience,
+                fromRole: "admin",
+                fromUser: actor,
+                toRole: audience,
+                toUser: "*",
+                text: text,
+                time: new Date().toISOString(),
+                read: false,
+                threadType: "system_notice",
+                messageType: "system_notice",
+                audienceRole: audience
+            });
+            ChatService.saveMessages(messages);
+            if (window.RecruitmentData && typeof RecruitmentData.appendAuditLog === "function") {
+                RecruitmentData.appendAuditLog({
+                    action: "system_notice",
+                    actorRole: "admin",
+                    actorUser: actor,
+                    audienceRole: audience,
+                    content: text
+                });
+            }
+            document.getElementById("noticeText").value = "";
+            Feedback.showToast("System notice published.", { variant: "success" });
+            renderNoticeHistory();
+        }
+
+        function renderNoticeHistory() {
+            const box = document.getElementById("noticeHistory");
+            const all = ChatService.getMessages().filter(function (msg) {
+                return msg && msg.fromRole === "admin" && (msg.threadType === "system_notice" || msg.messageType === "system_notice");
+            }).sort(function (a, b) {
+                return new Date(b.time) - new Date(a.time);
+            }).slice(0, 20);
+            if (!all.length) {
+                box.innerHTML = "<div class='empty'>No system notices yet.</div>";
+                return;
+            }
+            box.innerHTML = all.map(function (msg) {
+                const roleLabel = msg.audienceRole === "mo" ? "All MOs" : "All TAs";
+                return (
+                    "<div class='notice-item'>" +
+                    "<div class='meta'>" + escapeHtml(roleLabel) + " · " + escapeHtml(msg.fromUser || "admin") + " · " + escapeHtml(new Date(msg.time).toLocaleString()) + "</div>" +
+                    "<div>" + escapeHtml(msg.text || "") + "</div>" +
+                    "</div>"
+                );
+            }).join("");
+        }
+
+        function refreshAll() {
+            renderApplications();
+            renderAccounts();
+            renderJobOverview();
+            renderNoticeHistory();
+        }
+
+        function logout() {
+            localStorage.removeItem("username");
+            localStorage.removeItem("role");
+            window.location.href = "login.html";
+        }
+
+        window.onload = function () {
+            if (!checkSession()) return;
+            document.getElementById("adminUserLabel").textContent = localStorage.getItem("username") || "-";
+            refreshAll();
+        };
+    </script>
+</body>
+</html>
