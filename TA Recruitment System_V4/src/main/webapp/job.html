@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Jobs</title>
+    <style>
+        /* QMUL website style */
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            color: #333333;
+        }
+        
+        .header {
+            background-color: #003366;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .chat-entry {
+            position: absolute;
+            right: 24px;
+            top: 20px;
+            background-color: #ffffff;
+            color: #003366;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            padding: 8px 14px;
+            cursor: pointer;
+        }
+
+        .chat-badge {
+            position: absolute;
+            right: -8px;
+            top: -8px;
+            min-width: 18px;
+            height: 18px;
+            background-color: #dc3545;
+            border-radius: 999px;
+            display: none;
+            color: #fff;
+            font-size: 11px;
+            line-height: 18px;
+            text-align: center;
+            padding: 0 4px;
+            box-sizing: border-box;
+        }
+
+        .personal-center-entry {
+            position: absolute;
+            left: 24px;
+            top: 20px;
+            background-color: #ffffff;
+            color: #003366;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            padding: 8px 14px;
+            cursor: pointer;
+        }
+        
+        .container {
+            width: 700px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            text-align: center;
+            margin-top: 0;
+            color: #003366;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .job-card {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #003366;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .job-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .job-card h4 {
+            color: #003366;
+            margin: 0 0 15px 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .job-info {
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .job-info p {
+            margin: 5px 0;
+        }
+        
+        .job-info span {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        button {
+            margin: 10px 5px 0 0;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: #003366;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #002244;
+        }
+        
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #f0f0f0;
+            font-size: 12px;
+            color: #666;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        .search-card {
+            background-color: white;
+            padding: 18px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+
+        .search-card h3 {
+            margin: 0 0 10px 0;
+            color: #003366;
+            font-size: 18px;
+        }
+
+        .search-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-group input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .search-group input:focus {
+            outline: none;
+            border-color: #003366;
+            box-shadow: 0 0 0 2px rgba(0,51,102,0.1);
+        }
+
+        .filter-row {
+            margin-top: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .filter-item select {
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .no-jobs {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .job-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .tag { display:inline-block; background:#e6f2ff; color:#003366; border-radius:999px; padding:2px 10px; font-size:12px; margin-right:6px; }
+
+        .chat-modal-mask {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.45);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .chat-modal {
+            width: 720px;
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 24px rgba(0,0,0,0.2);
+        }
+
+        .chat-modal-header {
+            background-color: #003366;
+            color: #fff;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-modal-body {
+            padding: 14px;
+        }
+
+        .chat-meta {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .chat-messages {
+            height: 280px;
+            overflow-y: auto;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            padding: 10px;
+            background-color: #fafafa;
+            margin-bottom: 10px;
+        }
+
+        .chat-item {
+            margin-bottom: 8px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .chat-item.mine {
+            color: #003366;
+        }
+
+        .chat-send-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-send-row input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button class="personal-center-entry" onclick="goPersonalCenter()">Personal Center</button>
+        <h1>TA Recruitment System</h1>
+        <p>Queen Mary University of London - Beijing University of Posts and Telecommunications</p>
+        <button class="chat-entry" onclick="openTopChat()">
+            Chat
+            <span class="chat-badge" id="chatUnreadBadge"></span>
+        </button>
+    </div>
+    
+    <style>
+        /* Dynamic background */
+        body {
+            background: linear-gradient(-45deg, #e6f2ff, #ffffff, #e6f2ff, #ffffff);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+    </style>
+    
+    <div class="container">
+        <h2>Available TA Jobs</h2>
+        <div style="margin-bottom:10px;color:#003366;font-weight:600;">Role: <span id="roleLabel">-</span></div>
+
+        <div class="search-card">
+            <h3>Job Search (Fuzzy Filter)</h3>
+            <div class="search-group">
+                <input type="text" id="jobSearchInput" placeholder="Search by title / requirements / status / workload / deadline">
+                <button class="btn-primary" onclick="searchJobs()">Search</button>
+                <button class="btn-secondary" onclick="resetSearch()">Reset</button>
+            </div>
+            <div class="filter-row">
+                <div class="filter-item">
+                    <label for="sortSelect">Sort by:</label>
+                    <select id="sortSelect">
+                        <option value="deadline">Deadline</option>
+                        <option value="status">Open Status</option>
+                        <option value="match">Matching Degree</option>
+                    </select>
+                </div>
+                <label class="filter-item">
+                    <input type="checkbox" id="favoriteOnlyCheck">
+                    Favorites only
+                </label>
+                <label class="filter-item">
+                    <input type="checkbox" id="applicableOnlyCheck">
+                    Only applicable jobs
+                </label>
+            </div>
+        </div>
+        
+        <div id="jobsContainer">
+            <!-- Jobs will be dynamically inserted here -->
+        </div>
+        
+        <div class="navigation">
+            <button class="btn-secondary" onclick="window.location.href='profile.html'">Back to Profile</button>
+            <button class="btn-secondary" onclick="window.location.href='application_records.html'">Application Records</button>
+            <button class="btn-danger" onclick="logout()">Logout</button>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>© 2026 BUPT International School. All rights reserved.</p>
+    </div>
+
+    <link rel="stylesheet" href="theme.css">
+    <script src="theme.js"></script>
+    <script src="storage_service.js"></script>
+    <script src="chat_service.js"></script>
+    <script src="feedback-ui.js"></script>
+    <script src="role_access.js"></script>
+    <script>
+        // Check session
+        // 检查会话
+        function checkSession() {
+            return RoleAccess.guardPage({ roles: ["ta"], redirectUrl: "login.html" });
+        }
+        
+        function getJobsData() {
+            let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+            
+            if (jobs.length === 0) {
+                jobs = [
+                    {
+                        id: 1,
+                        title: "EBU6304 Teaching Assistant",
+                        workload: "5h/week",
+                        requirements: "Basic Programming",
+                        deadline: "May 31, 2026",
+                        status: "Open"
+                    },
+                    {
+                        id: 2,
+                        title: "EBU6001 Teaching Assistant",
+                        workload: "3h/week",
+                        requirements: "Good English",
+                        deadline: "May 31, 2026",
+                        status: "Closed"
+                    },
+                    {
+                        id: 3,
+                        title: "EBU6201 Teaching Assistant",
+                        workload: "4h/week",
+                        requirements: "Python Programming",
+                        deadline: "May 31, 2026",
+                        status: "Open"
+                    }
+                ];
+                localStorage.setItem("jobs", JSON.stringify(jobs));
+            }
+            return jobs;
+        }
+
+        const LIST_NAVIGATION_KEY = "jobNavigationList";
+        const DEFAULT_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect fill='%23003366' width='64' height='64' rx='32'/%3E%3Ctext x='32' y='38' text-anchor='middle' fill='white' font-size='22'%3EMO%3C/text%3E%3C/svg%3E";
+
+        function getPublicCollegeProfileForChat() {
+            try {
+                return JSON.parse(localStorage.getItem("moCollegeProfile_public") || "{}");
+            } catch (e) {
+                return {};
+            }
+        }
+        let currentVisibleJobs = [];
+
+        function getFavoritesKey() {
+            return "favoriteJobs_" + (localStorage.getItem("username") || "guest");
+        }
+
+        function getFavoriteJobIdSet() {
+            const favorites = JSON.parse(localStorage.getItem(getFavoritesKey())) || [];
+            const idSet = {};
+            favorites.forEach(item => {
+                if (item && item.jobId != null) {
+                    idSet[String(item.jobId)] = true;
+                }
+            });
+            return idSet;
+        }
+
+        function toggleFavorite(jobId, btnElement) {
+            const key = getFavoritesKey();
+            let favorites = JSON.parse(localStorage.getItem(key)) || [];
+            const idStr = String(jobId);
+            const idx = favorites.findIndex(item => String(item.jobId) === idStr);
+
+            if (idx >= 0) {
+                favorites.splice(idx, 1);
+                if (btnElement) btnElement.textContent = "☆";
+                Feedback.showToast("Removed from favorites.", { variant: "info" });
+            } else {
+                favorites.push({ jobId: idStr, addedAt: new Date().toISOString() });
+                if (btnElement) btnElement.textContent = "★";
+                Feedback.showToast("Added to favorites.", { variant: "success" });
+            }
+            localStorage.setItem(key, JSON.stringify(favorites));
+
+            // Refresh list if favorites-only filter is active
+            const onlyFavorites = document.getElementById("favoriteOnlyCheck").checked;
+            if (onlyFavorites) {
+                applyFiltersAndRender();
+            }
+        }
+
+        function parseDeadlineTimestamp(job) {
+            if (job.deadlineRaw) {
+                const tsRaw = new Date(job.deadlineRaw).getTime();
+                if (!Number.isNaN(tsRaw)) return tsRaw;
+            }
+            const ts = new Date(job.deadline).getTime();
+            return Number.isNaN(ts) ? Number.MAX_SAFE_INTEGER : ts;
+        }
+
+        function getStatusRank(job) {
+            const status = String(job.status || "").toLowerCase();
+            if (status === "open") return 0;
+            if (status === "waitlist only") return 1;
+            if (status === "not started") return 2;
+            return 3;
+        }
+
+        function getProfileTextForMatching() {
+            const username = localStorage.getItem("username") || "";
+            let textPool = [username];
+            try {
+                const users = JSON.parse(localStorage.getItem("users")) || [];
+                const currentUser = users.find(user => user.studentId === username);
+                if (currentUser) {
+                    textPool.push(currentUser.fullName || "");
+                    textPool.push(currentUser.major || "");
+                }
+            } catch (error) {}
+
+            try {
+                const personal = JSON.parse(localStorage.getItem("taPersonalCenter_" + username)) || {};
+                textPool.push(personal.university || "");
+                textPool.push(personal.workExperience || "");
+                textPool.push(personal.projectExperience || "");
+                textPool.push(personal.honors || "");
+            } catch (error) {}
+
+            return textPool.join(" ").toLowerCase();
+        }
+
+        function calculateMatchScore(job) {
+            const profileText = getProfileTextForMatching();
+            if (!profileText) return 50;
+            const requirementText = String(job.requirements || "").toLowerCase();
+            const tokens = requirementText.split(/[^a-z0-9]+/).filter(token => token.length >= 3);
+            if (tokens.length === 0) return 70;
+            let hitCount = 0;
+            tokens.forEach(token => {
+                if (profileText.includes(token)) {
+                    hitCount += 1;
+                }
+            });
+            const ratio = hitCount / tokens.length;
+            return Math.max(35, Math.round(ratio * 100));
+        }
+
+        function isApplicableJob(job) {
+            return (job.status === "Open" || job.status === "Waitlist Only") && RoleAccess.can("apply_job");
+        }
+
+        function sortJobs(jobs) {
+            const sortType = document.getElementById("sortSelect").value;
+            const sorted = jobs.slice();
+            sorted.sort((a, b) => {
+                if (sortType === "status") {
+                    return getStatusRank(a) - getStatusRank(b) || parseDeadlineTimestamp(a) - parseDeadlineTimestamp(b);
+                }
+                if (sortType === "match") {
+                    return (b.matchScore || 0) - (a.matchScore || 0) || parseDeadlineTimestamp(a) - parseDeadlineTimestamp(b);
+                }
+                return parseDeadlineTimestamp(a) - parseDeadlineTimestamp(b);
+            });
+            return sorted;
+        }
+
+        function applyFiltersAndRender() {
+            const keyword = document.getElementById("jobSearchInput").value.trim().toLowerCase();
+            const onlyFavorites = document.getElementById("favoriteOnlyCheck").checked;
+            const onlyApplicable = document.getElementById("applicableOnlyCheck").checked;
+            const favoriteIdSet = getFavoriteJobIdSet();
+
+            let jobs = getJobsData().map(job => {
+                return { ...job, matchScore: calculateMatchScore(job) };
+            });
+
+            jobs = jobs.filter(job => {
+                if (keyword) {
+                    const searchableText = [
+                        job.title,
+                        job.requirements,
+                        job.status,
+                        job.workload,
+                        job.deadline
+                    ].join(" ").toLowerCase();
+                    if (!searchableText.includes(keyword)) return false;
+                }
+                if (onlyFavorites && !favoriteIdSet[String(job.id)]) return false;
+                if (onlyApplicable && !isApplicableJob(job)) return false;
+                return true;
+            });
+
+            jobs = sortJobs(jobs);
+            renderJobs(jobs);
+        }
+
+        function renderJobs(jobs) {
+            let jobsContainer = document.getElementById("jobsContainer");
+            currentVisibleJobs = jobs.slice();
+            const navigationList = currentVisibleJobs.map(job => String(job.id));
+            localStorage.setItem(LIST_NAVIGATION_KEY, JSON.stringify(navigationList));
+
+            if (jobs.length === 0) {
+                jobsContainer.innerHTML = '<div class="no-jobs">No jobs available at the moment.</div>';
+                return;
+            }
+
+            let jobsHTML = '';
+            const favoriteIdSet = getFavoriteJobIdSet();
+            jobs.forEach((job, index) => {
+                let canApply = isApplicableJob(job);
+                let buttonClass = canApply ? "btn-primary" : "btn-secondary";
+                let buttonText = canApply ? "View Details & Apply" : "Current role has no permission";
+                const safeJobId = String(job.id).replace(/'/g, "\\'");
+                const safeJobTitle = String(job.title || "").replace(/'/g, "\\'");
+                let buttonAction = canApply ? `onclick="viewJobDetail('${safeJobId}')"` : `onclick="showNoPermissionNotice()"`;
+                const isFavorited = !!favoriteIdSet[String(job.id)];
+                const star = isFavorited ? "★" : "☆";
+                
+                jobsHTML += `
+                    <div class="job-card">
+                        <div style="display:flex; align-items:center; justify-content:space-between;">
+                            <h4 style="margin:0;">${index + 1}. ${job.title}</h4>
+                            <button class="btn-secondary" style="padding:2px 8px; font-size:16px; min-width:auto;" onclick="event.stopImmediatePropagation(); toggleFavorite('${safeJobId}', this)">${star}</button>
+                        </div>
+                        <div class="job-info">
+                            <p><span class="tag">Course ${job.course || "-"}</span><span class="tag">Position ${job.title || "-"}</span></p>
+                            <p><span>Workload:</span> ${job.workload}</p>
+                            <p><span>Requirements:</span> ${job.requirements}</p>
+                            <p><span>Deadline:</span> ${job.deadline}</p>
+                            <p><span>Status:</span> ${job.status}</p>
+                            <p><span>Matching:</span> ${job.matchScore || 0}%</p>
+                        </div>
+                        <div class="job-actions">
+                            <button class="${buttonClass}" ${buttonAction}>${buttonText}</button>
+                            <button class="btn-secondary" onclick="openConsultChat('${safeJobId}', '${safeJobTitle}')">Consult</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            jobsContainer.innerHTML = jobsHTML;
+        }
+
+        // Load jobs
+        // 加载职位
+        function loadJobs() {
+            applyFiltersAndRender();
+        }
+
+        // Search jobs with fuzzy match
+        // 职位模糊搜索
+        function searchJobs() {
+            applyFiltersAndRender();
+        }
+
+        // Reset search and show all jobs
+        // 重置搜索并显示全部职位
+        function resetSearch() {
+            document.getElementById("jobSearchInput").value = "";
+            document.getElementById("sortSelect").value = "deadline";
+            document.getElementById("favoriteOnlyCheck").checked = false;
+            document.getElementById("applicableOnlyCheck").checked = false;
+            loadJobs();
+        }
+        
+        function showClosedJobNotice() {
+            Feedback.showToast("This position is closed.", { variant: "info" });
+        }
+        function showNoPermissionNotice() {
+            Feedback.showToast("Current role has no permission", { variant: "info" });
+        }
+
+        // View job detail
+        // 查看职位详情
+        function viewJobDetail(jobId) {
+            const currentIndex = currentVisibleJobs.findIndex(job => String(job.id) === String(jobId));
+            localStorage.setItem("jobNavigationIndex", currentIndex >= 0 ? String(currentIndex) : "0");
+            localStorage.setItem("currentJobId", jobId);
+            window.location.href = "job_detail.html?id=" + encodeURIComponent(jobId);
+        }
+
+        function goPersonalCenter() {
+            window.location.href = "personal_center.html";
+        }
+
+        function getChatMessages() {
+            return ChatService.getMessages();
+        }
+
+        function saveChatMessages(messages) {
+            ChatService.saveMessages(messages);
+        }
+
+        function getUnreadCount() {
+            return ChatService.getUnreadCount();
+        }
+
+        function refreshUnreadBadge() {
+            let badge = document.getElementById("chatUnreadBadge");
+            let count = getUnreadCount();
+            if (count > 0) {
+                badge.style.display = "inline-block";
+                badge.textContent = count > 99 ? "99+" : String(count);
+            } else {
+                badge.style.display = "none";
+                badge.textContent = "";
+            }
+        }
+
+        let activeChat = { jobId: null, jobTitle: "", taUser: null };
+
+        function openConsultChat(jobId, jobTitle) {
+            let username = localStorage.getItem("username");
+            activeChat = { jobId: jobId, jobTitle: jobTitle, taUser: username };
+            ChatService.setSelectedThread(activeChat);
+            window.location.href = "chat_list.html";
+        }
+
+        function openTopChat() {
+            let topThread = ChatService.getTopChatThread();
+            if (!topThread) {
+                ChatService.clearSelectedThread();
+                window.location.href = "chat_list.html";
+                return;
+            }
+            activeChat = { jobId: topThread.jobId, jobTitle: topThread.jobTitle, taUser: topThread.taUser };
+            ChatService.setSelectedThread(activeChat);
+            window.location.href = "chat_list.html";
+        }
+
+        function openChatModal() {
+            document.getElementById("chatModalMask").style.display = "flex";
+            document.getElementById("chatMeta").textContent = "Job: " + activeChat.jobTitle + " | TA: " + activeChat.taUser;
+            renderChatMessages();
+            markThreadAsRead();
+        }
+
+        function closeChatModal() {
+            document.getElementById("chatModalMask").style.display = "none";
+            refreshUnreadBadge();
+        }
+
+        function getCurrentThreadMessages() {
+            return ChatService.getThreadMessages(activeChat.jobId, activeChat.taUser);
+        }
+
+        function renderChatMessages() {
+            let role = localStorage.getItem("role");
+            let username = localStorage.getItem("username");
+            let thread = getCurrentThreadMessages();
+            let box = document.getElementById("chatMessages");
+
+            if (thread.length === 0) {
+                box.innerHTML = "<div class='chat-item'>No messages yet. Start consulting.</div>";
+                return;
+            }
+
+            let html = "";
+            thread.forEach(msg => {
+                let mine = msg.fromRole === role && msg.fromUser === username;
+                let cls = mine ? "chat-item mine" : "chat-item";
+                let time = new Date(msg.time).toLocaleString();
+                const safeUser = String(msg.fromUser || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                const safeText = String(msg.text || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                if (!mine && (msg.fromRole === "mo" || msg.fromRole === "interviewer")) {
+                    let moAvatar = DEFAULT_AVATAR;
+                    const pub = getPublicCollegeProfileForChat();
+                    if (pub.avatarDataUrl) {
+                        moAvatar = pub.avatarDataUrl;
+                    } else {
+                        try {
+                            const legacy = JSON.parse(localStorage.getItem("moLeaderInfo_mo") || "{}");
+                            if (legacy.avatarDataUrl) moAvatar = legacy.avatarDataUrl;
+                        } catch (e) {}
+                    }
+                    html += `<div class="${cls}" style="display:flex;align-items:center;gap:8px;"><img src="${moAvatar}" style="width:28px;height:28px;border-radius:999px;object-fit:cover;border:1px solid #003366;" alt="MO"><div><strong>${safeUser}</strong> (${time}): ${safeText}</div></div>`;
+                } else {
+                    html += `<div class="${cls}"><strong>${safeUser}</strong> (${time}): ${safeText}</div>`;
+                }
+            });
+            box.innerHTML = html;
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function markThreadAsRead() {
+            ChatService.markThreadAsRead(activeChat.jobId, activeChat.taUser);
+            refreshUnreadBadge();
+        }
+
+        function sendChatMessage() {
+            let role = localStorage.getItem("role");
+            let username = localStorage.getItem("username");
+            let input = document.getElementById("chatInput");
+            let text = input.value.trim();
+            if (!text) return;
+
+            let messages = getChatMessages();
+            messages.push({
+                jobId: activeChat.jobId,
+                jobTitle: activeChat.jobTitle,
+                taUser: activeChat.taUser,
+                fromRole: role,
+                fromUser: username,
+                toRole: "mo",
+                toUser: "mo",
+                text: text,
+                time: new Date().toISOString(),
+                read: false
+            });
+            saveChatMessages(messages);
+            input.value = "";
+            renderChatMessages();
+            refreshUnreadBadge();
+        }
+        
+        // Logout
+        // 登出
+        function logout() {
+            localStorage.removeItem("username");
+            localStorage.removeItem("role");
+            window.location.href = "login.html";
+        }
+        
+        // Check session and load jobs on page load
+        // 页面加载时检查会话和加载职位
+        window.onload = function() {
+            checkSession();
+            document.getElementById("roleLabel").textContent = RoleAccess.getRoleLabel();
+            loadJobs();
+            document.getElementById("jobSearchInput").addEventListener("input", searchJobs);
+            document.getElementById("sortSelect").addEventListener("change", applyFiltersAndRender);
+            document.getElementById("favoriteOnlyCheck").addEventListener("change", applyFiltersAndRender);
+            document.getElementById("applicableOnlyCheck").addEventListener("change", applyFiltersAndRender);
+            refreshUnreadBadge();
+        };
+    </script>
+
+    <div class="chat-modal-mask" id="chatModalMask">
+        <div class="chat-modal">
+            <div class="chat-modal-header">
+                <strong>Consultation Chat</strong>
+                <button class="btn-secondary" onclick="closeChatModal()">Close</button>
+            </div>
+            <div class="chat-modal-body">
+                <div class="chat-meta" id="chatMeta"></div>
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-send-row">
+                    <input type="text" id="chatInput" placeholder="Type your message to MO">
+                    <button class="btn-primary" onclick="sendChatMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultation Chats</title>
+    <style>
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            color: #333333;
+            background: linear-gradient(-45deg, #e6f2ff, #ffffff, #e6f2ff, #ffffff);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .header {
+            background-color: #003366;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .personal-center-entry {
+            position: absolute;
+            left: 24px;
+            top: 20px;
+            background-color: #ffffff;
+            color: #003366;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            padding: 8px 14px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .container {
+            width: 1100px;
+            margin: 30px auto 80px;
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 16px;
+        }
+
+        .card {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 16px;
+        }
+
+        .title {
+            margin: 0 0 12px 0;
+            color: #003366;
+            font-size: 20px;
+        }
+
+        .thread-list {
+            max-height: 540px;
+            overflow-y: auto;
+        }
+
+        .thread-item {
+            background: #fff;
+            border-radius: 6px;
+            border-left: 4px solid #003366;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .thread-item.active {
+            outline: 2px solid rgba(0,51,102,0.2);
+        }
+        .thread-item.system-notice {
+            border-left-color: #7b3ff2;
+            background: linear-gradient(120deg, #faf7ff, #ffffff);
+        }
+
+        .thread-item h4 {
+            margin: 0 0 6px 0;
+            color: #003366;
+            font-size: 15px;
+        }
+
+        .thread-item p {
+            margin: 2px 0;
+            color: #555;
+            font-size: 13px;
+        }
+
+        .thread-preview {
+            color: #445;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .unread-badge {
+            display: inline-block;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 999px;
+            background-color: #dc3545;
+            color: white;
+            font-size: 11px;
+            line-height: 18px;
+            text-align: center;
+            padding: 0 4px;
+            box-sizing: border-box;
+        }
+
+        .chat-meta {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .messages {
+            height: 430px;
+            overflow-y: auto;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            background: #fafafa;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .msg {
+            margin-bottom: 8px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .msg-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .msg-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #d0dbe8;
+            background: #e6f2ff;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .msg-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .msg.mine {
+            color: #003366;
+        }
+        .msg.system-notice {
+            background: #f5f1ff;
+            border: 1px solid #decef9;
+            border-radius: 8px;
+            padding: 8px 10px;
+        }
+
+        .send-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .send-row input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 4px;
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: #003366;
+            color: #fff;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .toolbar {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #f0f0f0;
+            font-size: 12px;
+            color: #666;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button id="personalCenterBtn" class="personal-center-entry" onclick="goPersonalCenter()">Personal Center</button>
+        <h1>TA Recruitment System</h1>
+        <p>Consultation Chat List</p>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h3 class="title">Conversations</h3>
+            <div id="threadList" class="thread-list"></div>
+        </div>
+
+        <div class="card">
+            <h3 class="title">Chat Window</h3>
+            <div id="chatMeta" class="chat-meta">Select a conversation from the left.</div>
+            <div id="messages" class="messages"></div>
+            <div class="send-row">
+                <input id="chatInput" type="text" placeholder="Type your message">
+                <button id="sendBtn" class="btn btn-primary" onclick="sendMessage()">Send</button>
+            </div>
+            <div class="toolbar">
+                <button class="btn btn-secondary" onclick="goBack()">Back</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2026 BUPT International School. All rights reserved.</p>
+    </div>
+
+    <link rel="stylesheet" href="theme.css">
+    <script src="theme.js"></script>
+    <script src="storage_service.js"></script>
+    <script src="chat_service.js"></script>
+    <script src="role_access.js"></script>
+    <script>
+        let selectedThreadKey = "";
+        let selectedThread = null;
+        let threadMap = {};
+        let shouldAutoScrollToBottom = true;
+        const DEFAULT_AVATAR = "assets/qmul-logo.png";
+
+        function checkSession() {
+            return RoleAccess.guardPage({ roles: ["ta", "mo", "admin"], redirectUrl: "login.html" });
+        }
+
+        function getMessages() {
+            return ChatService.getMessages();
+        }
+
+        function saveMessages(messages) {
+            ChatService.saveMessages(messages);
+        }
+
+        function getCurrentUser() {
+            return ChatService.getCurrentUser();
+        }
+
+        function threadKey(jobId, taUser) {
+            return ChatService.threadKey(jobId, taUser);
+        }
+
+        function buildThreads() {
+            return ChatService.buildThreads();
+        }
+
+        function renderThreadList() {
+            const list = document.getElementById("threadList");
+            const threads = buildThreads();
+            threadMap = {};
+            if (threads.length === 0) {
+                list.innerHTML = "<p>No conversations yet.</p>";
+                selectedThread = null;
+                selectedThreadKey = "";
+                renderMessages();
+                return;
+            }
+
+            let html = "";
+            threads.forEach(thread => {
+                const key = threadKey(thread.jobId, thread.taUser);
+                threadMap[key] = thread;
+                const safeKey = String(key).replace(/'/g, "\\'");
+                const activeClass = selectedThreadKey === key ? "active" : "";
+                const noticeClass = thread.threadType === "system_notice" ? "system-notice" : "";
+                const unreadHtml = thread.unread > 0 ? ` <span class="unread-badge">${thread.unread > 99 ? "99+" : thread.unread}</span>` : "";
+                const senderLabel = thread.lastFromUser || (thread.lastFromRole ? thread.lastFromRole.toUpperCase() : "System");
+                const previewText = (thread.lastText || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                const title = thread.threadType === "system_notice"
+                    ? ("System Notice · " + String((thread.audienceRole || "").toUpperCase() || "INFO"))
+                    : String(thread.jobTitle || "");
+                html += `
+                    <div class="thread-item ${activeClass} ${noticeClass}" onclick="selectThreadByKey('${safeKey}')">
+                        <h4>${title}${unreadHtml}</h4>
+                        <p class="thread-preview">${senderLabel}: ${previewText || "No messages yet."}</p>
+                        <p>${thread.threadType === "system_notice" ? "Broadcast thread" : ("TA: " + thread.taUser)}</p>
+                        <p>Updated: ${new Date(thread.latestTime).toLocaleString()}</p>
+                    </div>
+                `;
+            });
+            list.innerHTML = html;
+
+            if (!selectedThreadKey) {
+                const s = ChatService.getSelectedThread();
+                if (s) {
+                    selectThreadByKey(threadKey(s.jobId, s.taUser));
+                } else {
+                    const first = threads[0];
+                    selectThreadByKey(threadKey(first.jobId, first.taUser));
+                }
+            }
+        }
+
+        function selectThreadByKey(key) {
+            const thread = threadMap[key];
+            if (!thread) return;
+            selectedThreadKey = key;
+            selectedThread = {
+                jobId: thread.jobId,
+                jobTitle: thread.jobTitle,
+                taUser: thread.taUser,
+                threadType: thread.threadType || "",
+                audienceRole: thread.audienceRole || ""
+            };
+            shouldAutoScrollToBottom = true;
+            ChatService.setSelectedThread(selectedThread);
+            markThreadAsRead();
+            renderThreadList();
+            renderMessages();
+            updateSendButtonState();
+        }
+
+        function getSelectedMessages() {
+            if (!selectedThread) return [];
+            return ChatService.getThreadMessages(selectedThread.jobId, selectedThread.taUser);
+        }
+
+        function getTaAvatar(taUser) {
+            if (!taUser) return DEFAULT_AVATAR;
+            const data = JSON.parse(localStorage.getItem("taPersonalCenter_" + taUser)) || {};
+            return data.avatar || DEFAULT_AVATAR;
+        }
+
+        const MO_COLLEGE_PROFILE_PUBLIC_KEY = "moCollegeProfile_public";
+
+        function getPublicCollegeProfile() {
+            try {
+                return JSON.parse(localStorage.getItem(MO_COLLEGE_PROFILE_PUBLIC_KEY) || "{}");
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function getMOAvatar() {
+            const pub = getPublicCollegeProfile();
+            if (pub.avatarDataUrl) return pub.avatarDataUrl;
+            const user = localStorage.getItem("username") || "mo";
+            try {
+                const info = JSON.parse(localStorage.getItem("moLeaderInfo_" + user) || "{}");
+                if (info.avatarDataUrl) return info.avatarDataUrl;
+            } catch (e) {}
+            if (window.getMOLeaderInfo) {
+                const info = window.getMOLeaderInfo();
+                if (info && info.avatarDataUrl) return info.avatarDataUrl;
+            }
+            try {
+                const legacy = JSON.parse(localStorage.getItem("moLeaderInfo_mo") || "{}");
+                if (legacy.avatarDataUrl) return legacy.avatarDataUrl;
+            } catch (e) {}
+            return DEFAULT_AVATAR;
+        }
+
+        function renderMessages() {
+            const box = document.getElementById("messages");
+            const meta = document.getElementById("chatMeta");
+            const { username, role } = getCurrentUser();
+
+            if (!selectedThread) {
+                meta.textContent = "Select a conversation from the left.";
+                box.innerHTML = "";
+                return;
+            }
+
+            if (selectedThread.threadType === "system_notice") {
+                meta.textContent = "System Notice Thread | Audience: " + String(selectedThread.audienceRole || "").toUpperCase() + " | Role: " + role.toUpperCase();
+            } else {
+                meta.textContent = "Job: " + selectedThread.jobTitle + " | TA: " + selectedThread.taUser + " | Role: " + role.toUpperCase();
+            }
+            const rows = getSelectedMessages();
+            if (rows.length === 0) {
+                box.innerHTML = "<div class='msg'>No messages yet. Start the conversation.</div>";
+                return;
+            }
+
+            let html = "";
+            rows.forEach(msg => {
+                const mine = msg.fromRole === role && msg.fromUser === username;
+                const noticeCls = msg.threadType === "system_notice" || msg.messageType === "system_notice" ? " system-notice" : "";
+                const cls = (mine ? "msg mine" : "msg") + noticeCls;
+                const safeText = String(msg.text || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                const safeUser = String(msg.fromUser || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                const header = `<strong>${safeUser}</strong> (${new Date(msg.time).toLocaleString()}): `;
+                if (msg.fromRole === "ta") {
+                    const avatar = getTaAvatar(msg.taUser || msg.fromUser);
+                    html += `<div class="msg-row"><img class="msg-avatar" src="${avatar}" alt="TA avatar"><div class="msg-body ${cls}">${header}${safeText}</div></div>`;
+                } else if (msg.fromRole === "admin") {
+                    html += `<div class="msg-row"><div class="msg-avatar" style="display:flex;align-items:center;justify-content:center;background:#7b3ff2;color:#fff;border-color:#6a33d6;font-weight:700;">A</div><div class="msg-body ${cls}">${header}${safeText}</div></div>`;
+                } else {
+                    const moAvatar = getMOAvatar();
+                    html += `<div class="msg-row" style="flex-direction:row-reverse;"><img class="msg-avatar" src="${moAvatar}" alt="MO avatar" style="margin-left:8px;margin-right:0;"><div class="msg-body ${cls}">${header}${safeText}</div></div>`;
+                }
+            });
+            box.innerHTML = html;
+            if (shouldAutoScrollToBottom) {
+                box.scrollTop = box.scrollHeight;
+            }
+        }
+
+        function markThreadAsRead() {
+            if (!selectedThread) return;
+            ChatService.markThreadAsRead(selectedThread.jobId, selectedThread.taUser);
+        }
+
+        function sendMessage() {
+            if (!selectedThread) return;
+            const roleInfo = getCurrentUser();
+            if (roleInfo.role !== "ta" && roleInfo.role !== "mo") return;
+            if (selectedThread.threadType === "system_notice") return;
+            const input = document.getElementById("chatInput");
+            const text = input.value.trim();
+            if (!text) return;
+
+            const { username, role } = roleInfo;
+            const toRole = role === "mo" ? "ta" : "mo";
+            const toUser = role === "mo" ? selectedThread.taUser : "mo";
+            const messages = getMessages();
+
+            messages.push({
+                jobId: selectedThread.jobId,
+                jobTitle: selectedThread.jobTitle,
+                taUser: selectedThread.taUser,
+                fromRole: role,
+                fromUser: username,
+                toRole: toRole,
+                toUser: toUser,
+                text: text,
+                time: new Date().toISOString(),
+                read: false
+            });
+
+            saveMessages(messages);
+            input.value = "";
+            shouldAutoScrollToBottom = true;
+            updateSendButtonState();
+            renderThreadList();
+            renderMessages();
+        }
+
+        function updateSendButtonState() {
+            const sendBtn = document.getElementById("sendBtn");
+            const chatInput = document.getElementById("chatInput");
+            const hasThread = !!selectedThread;
+            const hasText = chatInput.value.trim().length > 0;
+            const canSendRole = (getCurrentUser().role === "ta" || getCurrentUser().role === "mo");
+            const canSendThread = !selectedThread || selectedThread.threadType !== "system_notice";
+            chatInput.disabled = !(canSendRole && hasThread && canSendThread);
+            sendBtn.disabled = !(hasThread && hasText && canSendRole && canSendThread);
+            if (!canSendRole || !canSendThread) {
+                chatInput.placeholder = selectedThread && selectedThread.threadType === "system_notice"
+                    ? "System notice is read-only."
+                    : "Current role is read-only in this chat.";
+            } else {
+                chatInput.placeholder = "Type your message";
+            }
+        }
+
+        function bindChatInputEvents() {
+            const chatInput = document.getElementById("chatInput");
+            const box = document.getElementById("messages");
+
+            chatInput.addEventListener("input", updateSendButtonState);
+            chatInput.addEventListener("keydown", function (event) {
+                if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            box.addEventListener("scroll", function () {
+                const distance = box.scrollHeight - box.scrollTop - box.clientHeight;
+                shouldAutoScrollToBottom = distance < 24;
+            });
+        }
+
+        function goBack() {
+            const role = localStorage.getItem("role");
+            if (role === "mo") {
+                window.location.href = "mo_dashboard.html";
+            } else if (role === "admin") {
+                window.location.href = "admin_dashboard.html";
+            } else {
+                window.location.href = "job.html";
+            }
+        }
+
+        function goPersonalCenter() {
+            window.location.href = "personal_center.html";
+        }
+
+        window.onload = function() {
+            checkSession();
+            if (localStorage.getItem("role") === "ta") {
+                document.getElementById("personalCenterBtn").style.display = "inline-block";
+            }
+            bindChatInputEvents();
+            renderThreadList();
+            renderMessages();
+            updateSendButtonState();
+        };
+    </script>
+</body>
+</html>
